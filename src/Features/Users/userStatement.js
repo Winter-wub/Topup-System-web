@@ -30,9 +30,7 @@ const Status = ({ statusText }) => {
 
 const UsersStatementList = ({ match }) => {
 	const [searchKeyWord, setsearchKeyWord] = useState('');
-	const { isLoad, approvList, userStatementData } = useCustomerStatement(
-		match.params.id,
-	);
+	const { isLoad, userStatementData } = useCustomerStatement(match.params.id);
 	const { isLoad: isLoadUser, userData } = useCustomer(match.params.id);
 	const { statements, total, promotion_total } = userStatementData;
 	return (
@@ -100,32 +98,6 @@ const UsersStatementList = ({ match }) => {
 								</Form>
 							</CardBody>
 						)}
-						<h3 style={{ marginBottom: '10px' }}>รายการรออนุมัติ</h3>
-						<Table>
-							<thead>
-								<tr>
-									<th>ลำดับ</th>
-									<th>การกระทำ</th>
-									<th>คำอธิบาย</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody>
-								{approvList.map((state, index) => (
-									<tr key={state.id}>
-										<td>{index}</td>
-										<td>{state.type}</td>
-										<td>{state.description}</td>
-										<td>
-											<div className="ActionMenu">
-												<Button>อนุมติรายการ</Button>
-												<Button>ไม่อนุมัติรายการ</Button>
-											</div>
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</Table>
 						<h3 style={{ marginBottom: '10px' }}>ประวัติการฝาก และถอน</h3>
 						<Searchbox
 							handleChange={e => setsearchKeyWord(e.target.value)}

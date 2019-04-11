@@ -37,8 +37,8 @@ const UserEdit = ({ match }) => {
 						</CardHeader>
 						<CardBody>
 							<div>
+								<h3 style={{ marginBottom: '10px' }}>ข้อมูลส่วนตัว</h3>
 								<Form>
-									<h3 style={{ marginBottom: '10px' }}>ข้อมูลส่วนตัว</h3>
 									<FormGroup row>
 										<Label sm={2}>ID</Label>
 										<Col sm={10}>
