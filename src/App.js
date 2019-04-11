@@ -2,7 +2,9 @@ import React from 'react';
 import { Container } from 'reactstrap';
 import history from './utils/history';
 import { Router, Route, Link } from 'react-router-dom';
-import { Users, UserEdit, UsersStatementList } from './Features/Users/users';
+import Users from './Features/Users/usersList';
+import UserEdit from './Features/Users/userEdit';
+import UsersStatementList from './Features/Users/userStatement';
 
 const Home = () => {
 	return (
