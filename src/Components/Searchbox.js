@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Col, Label, Input, FormGroup } from 'reactstrap';
-const SearchBox = ({ handleChange, value }) => {
+const SearchBox = ({ handleChange, value, style }) => {
 	return (
 		<Form>
 			<FormGroup row>
@@ -9,7 +9,7 @@ const SearchBox = ({ handleChange, value }) => {
 				</Label>
 				<Col sm={5}>
 					<Input
-						style={{ width: '60%' }}
+						style={style}
 						type="text"
 						value={value}
 						onChange={handleChange}

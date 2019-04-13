@@ -102,6 +102,7 @@ const UsersStatementList = ({ match }) => {
 						<Searchbox
 							handleChange={e => setsearchKeyWord(e.target.value)}
 							value={searchKeyWord}
+							style={{ width: '60%' }}
 						/>
 						<Table>
 							<thead>
