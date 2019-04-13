@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import _ from 'lodash';
 import {
 	Card,
 	CardHeader,
@@ -12,31 +15,44 @@ import {
 	Col,
 } from 'reactstrap';
 import history from '../../utils/history';
+import axios from '../../utils/axios';
+const swal = withReactContent(Swal);
+
+const userInfoFormat = () => ({
+	fullname: '',
+	gameId: '',
+	email: '',
+	telno: '',
+	bank_name: '',
+	bank_account_name: '',
+	bank_account_id: '',
+});
 
 const UserCreate = () => {
-	const [userInfo, setUserInfo] = useState({
-		fullname: '',
-		gameId: '',
-		telno: '',
-		bank_name: '',
-		bank_account_name: '',
-		bank_account_id: '',
-	});
-
+	const [userInfo, setUserInfo] = useState(userInfoFormat);
 	const [validate, setValidate] = useState({
 		fullname: false,
 		gameId: false,
 		telno: false,
-		bank_name: false,
-		bank_account_name: false,
-		bank_account_id: false,
 	});
+	const checkGameIdExists = async gameId => {
+		const { data: Respone } = await axios.get(
+			`/api/v1/customers?filter={gameId:${gameId}}`,
+		);
+		const { data } = Respone;
+		if (data.count > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+	const checkGameIdExistsDebound = _.debounce(checkGameIdExists, 900);
 
-	const validater = (event, key) => {
+	const validater = async (event, key = '') => {
 		const value = event.target.value;
 		setUserInfo({ ...userInfo, [key]: value });
 		if (key === 'gameId') {
-			if (value.length < 6) {
+			if (value.length < 6 || checkGameIdExistsDebound(value)) {
 				setValidate({ ...validate, gameId: false });
 			} else {
 				setValidate({ ...validate, gameId: true });
@@ -53,8 +69,40 @@ const UserCreate = () => {
 			} else {
 				setValidate({ ...validate, telno: true });
 			}
-		} 
+		}
 	};
+
+	const createCustomer = async () => {
+		try {
+			const postData = {
+				gameId: userInfo.gameId,
+				fullname: userInfo.fullname,
+				email: userInfo.email,
+				telno: userInfo.telno,
+				bank: userInfo.bank_name,
+				bank_account_name: userInfo.bank_account_name,
+				bank_account_id: userInfo.bank_account_id,
+			};
+			const { data: response } = await axios.post('/api/v1/customers', {
+				data: postData,
+			});
+			const { data } = response;
+			const text = data.result
+				? 'สร้างข้อมูลลูกค้าสำเร็จ'
+				: 'สร้างข้อมูลลูกค้าไม่สำเร็จ';
+			await swal.fire('Result', text, 'info');
+			setUserInfo(userInfoFormat);
+		} catch (err) {
+			console.log(err);
+			await swal.fire(
+				'Result',
+				'ไม่สามารถติดต่อกับ API ได้ กรุณาลองใหม่อีกครั้ง',
+				'warning',
+			);
+		}
+	};
+
+	const isEnabledAddNewCustomer = Object.values(validate).includes(false);
 
 	return (
 		<Card>
@@ -79,7 +127,7 @@ const UserCreate = () => {
 								/>
 								{!validate.gameId && (
 									<div className="text-danger">
-										ID ต้องมีตัวอักษรภาษาอังกฤษและมากกว่า 6 ตัว
+										ID ต้องมีตัวอักษรภาษาอังกฤษและมากกว่า 6 ตัว หรือมีคนใช้แล้ว
 									</div>
 								)}
 							</Col>
@@ -113,13 +161,29 @@ const UserCreate = () => {
 								)}
 							</Col>
 						</FormGroup>
+						<FormGroup row>
+							<Label sm={2}>E-mail</Label>
+							<Col sm={10}>
+								<Input
+									style={{ width: '60%' }}
+									type="text"
+									value={userInfo.email}
+									onChange={e => validater(e, 'email')}
+								/>
+							</Col>
+						</FormGroup>
 					</Form>
 					<h3 style={{ marginBottom: '10px' }}>ข้อมูลธนาคาร</h3>
 					<Form>
 						<FormGroup row>
 							<Label sm={2}>ธนาคาร</Label>
 							<Col sm={10}>
-								<Input style={{ width: '60%' }} value={userInfo.bank_name} />
+								<Input
+									style={{ width: '60%' }}
+									type="text"
+									value={userInfo.bank_name}
+									onChange={e => validater(e, 'bank_name')}
+								/>
 							</Col>
 						</FormGroup>
 						<FormGroup row>
@@ -127,7 +191,9 @@ const UserCreate = () => {
 							<Col sm={10}>
 								<Input
 									style={{ width: '60%' }}
+									type="text"
 									value={userInfo.bank_account_name}
+									onChange={e => validater(e, 'bank_account_name')}
 								/>
 							</Col>
 						</FormGroup>
@@ -135,8 +201,10 @@ const UserCreate = () => {
 							<Label sm={2}>หมายเลขบัญชี</Label>
 							<Col sm={10}>
 								<Input
+									type="text"
 									style={{ width: '60%' }}
 									value={userInfo.bank_account_id}
+									onChange={e => validater(e, 'bank_account_id')}
 								/>
 							</Col>
 						</FormGroup>
@@ -144,7 +212,13 @@ const UserCreate = () => {
 				</div>
 			</CardBody>
 			<CardFooter>
-				<Button color="primary">Add User</Button>
+				<Button
+					disabled={isEnabledAddNewCustomer}
+					color="primary"
+					onClick={async () => await createCustomer()}
+				>
+					Add User
+				</Button>
 			</CardFooter>
 		</Card>
 	);

@@ -21,7 +21,7 @@ const App = () => {
 	return (
 		<div>
 			<Router history={history}>
-				<Navbar color="light" light expand="md" vertical>
+				<Navbar color="light" light expand="md">
 					<NavbarBrand href="/" />
 					<Nav className="ml-auto" navbar>
 						{NavbarItem.map((item, index) => (
