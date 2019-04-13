@@ -5,6 +5,7 @@ import { Router, Route, NavLink } from 'react-router-dom';
 import Users from './Features/Users/usersList';
 import UserEdit from './Features/Users/userEdit';
 import UsersStatementList from './Features/Users/userStatement';
+import UserCreate from './Features/Users/userCreate';
 import AccountManager from './Features/Accounts/account';
 
 const Home = () => {
@@ -36,6 +37,7 @@ const App = () => {
 				<Container style={{ marginTop: '1%' }}>
 					<Route path="/" exact component={Home} />
 					<Route path="/customers" component={Users} />
+					<Route path="/create/customer" component={UserCreate} />
 					<Route path="/customer/:id" component={UserEdit} />
 					<Route path="/statement/:id" component={UsersStatementList} />
 					<Route path="/account" component={AccountManager} />
