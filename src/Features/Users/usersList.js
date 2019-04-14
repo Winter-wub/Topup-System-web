@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
 	Table,
 	Button,
@@ -6,19 +6,46 @@ import {
 	Card,
 	CardHeader,
 	CardBody,
+	CardFooter,
 	Col,
 	Row,
+	Input,
+	InputGroup,
+	InputGroupAddon,
 } from 'reactstrap';
+import moment from 'moment';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 import Searchbox from '../../Components/Searchbox';
 
 import useCustomers from '../../Hooks/useCustomers';
 
 import history from '../../utils/history';
 import '../../assets/css/users.css';
+const swal = withReactContent(Swal);
 
 const UsersList = () => {
-	const [searchKeyWord, setsearchKeyWord] = useState('');
-	const { isLoad, customerList } = useCustomers();
+	const {
+		isLoad,
+		customerList,
+		setFilter,
+		filter,
+		setOrder,
+		setToggleAsc,
+		toggleAsc,
+		order,
+		page,
+		setPage,
+	} = useCustomers(10);
+
+	const header = [
+		{ key: 'gameId', label: 'ID' },
+		{ key: 'fullname', label: 'Full Name' },
+		{ key: 'telno', label: 'Tel No.' },
+		{ key: 'created_at', label: 'Register at' },
+	];
+
+	console.log(page);
 
 	return (
 		<Card>
@@ -27,8 +54,8 @@ const UsersList = () => {
 				<Row>
 					<Col>
 						<Searchbox
-							handleChange={e => setsearchKeyWord(e.target.value)}
-							value={searchKeyWord}
+							handleChange={e => setFilter(e.target.value)}
+							value={filter}
 							style={{ width: '100%' }}
 						/>
 					</Col>
@@ -51,32 +78,49 @@ const UsersList = () => {
 					<Table>
 						<thead>
 							<tr>
-								<th>ID</th>
-								<th>Full Name</th>
-								<th>Tel No.</th>
-								<th>Register at</th>
+								{header.map(head => (
+									<th
+										onClick={() => {
+											setOrder(head.key);
+											setToggleAsc(!toggleAsc);
+										}}
+									>
+										{head.label}{' '}
+										{order === head.key && (
+											<i
+												className={`fa fa-arrow-${toggleAsc ? 'down' : 'up'}`}
+											/>
+										)}
+									</th>
+								))}
 								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
 							{customerList.map(customer => (
-								<tr key={customer.id}>
-									<td>{customer.id}</td>
+								<tr key={customer.gameId}>
+									<td>{customer.gameId}</td>
 									<td>{customer.fullname}</td>
 									<td>{customer.telno}</td>
-									<td>{customer.created_at}</td>
+									<td>
+										{moment(customer.created_at).format(
+											'MMMM Do YYYY, h:mm:ss a',
+										)}
+									</td>
 									<td>
 										<div className="ActionMenu">
 											<Button
 												color="primary"
 												onClick={() =>
-													history.push(`/statement/${customer.id}`)
+													history.push(`/statement/${customer._id}`)
 												}
 											>
 												<i className="fa fa-list-alt" />
 											</Button>
 											<Button
-												onClick={() => history.push(`/customer/${customer.id}`)}
+												onClick={() =>
+													history.push(`/customer/${customer._id}`)
+												}
 												color="warning"
 											>
 												<i className="fa fa-pencil" />
@@ -92,6 +136,37 @@ const UsersList = () => {
 					</Table>
 				)}
 			</CardBody>
+			<CardFooter>
+				<div style={{ width: '20%' }}>
+					<InputGroup>
+						<InputGroupAddon addonType="prepend">
+							<Button
+								color="primary"
+								disabled={page === 1}
+								onClick={() => setPage(page - 1)}
+							>
+								<i className="fa fa-arrow-left" />
+							</Button>
+						</InputGroupAddon>
+						<Input
+							type="number"
+							value={page}
+							onChange={e => {
+								if (e.target.value > 1) {
+									swal.fire('Alert', 'คุณไม่ควรใส่ค่าน้อยกว่า 1');
+								} else {
+									setPage(e.target.value);
+								}
+							}}
+						/>
+						<InputGroupAddon addonType="append">
+							<Button color="primary" onClick={() => setPage(page + 1)}>
+								<i className="fa fa-arrow-right" />
+							</Button>
+						</InputGroupAddon>
+					</InputGroup>
+				</div>
+			</CardFooter>
 		</Card>
 	);
 };

@@ -45,7 +45,7 @@ const UserEdit = ({ match }) => {
 											<Input
 												style={{ width: '60%' }}
 												type="text"
-												value={userData.id}
+												value={userData.gameId}
 											/>
 										</Col>
 									</FormGroup>
@@ -76,7 +76,7 @@ const UserEdit = ({ match }) => {
 										<Col sm={10}>
 											<Input
 												style={{ width: '60%' }}
-												value={userData.bank.bank_name}
+												value={userData.bank_info.bank_name}
 											/>
 										</Col>
 									</FormGroup>
@@ -85,7 +85,7 @@ const UserEdit = ({ match }) => {
 										<Col sm={10}>
 											<Input
 												style={{ width: '60%' }}
-												value={userData.bank.bank_account_name}
+												value={userData.bank_info.bank_account_name}
 											/>
 										</Col>
 									</FormGroup>
@@ -94,7 +94,7 @@ const UserEdit = ({ match }) => {
 										<Col sm={10}>
 											<Input
 												style={{ width: '60%' }}
-												value={userData.bank.bank_no}
+												value={userData.bank_info.bank_no}
 											/>
 										</Col>
 									</FormGroup>

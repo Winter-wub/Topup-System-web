@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
-import mockuser from '../mockusers.json';
+import axios from '../utils/axios';
 
 const useCustomer = id => {
 	const [userData, setUsersData] = useState({});
 	const [isLoad, setLoad] = useState(true);
 
 	useEffect(() => {
-		const index = mockuser.findIndex(item => item.id === id);
-
-		setUsersData(mockuser[index]);
-		setLoad(false);
+		axios
+			.get(`/api/v1/customers?filter={ "_id": "${id}"} `)
+			.then(({ data }) => {
+				console.log(data.data);
+				setUsersData(data.data.customers[0]);
+				setLoad(false);
+			});
 	}, []);
 
 	return {
