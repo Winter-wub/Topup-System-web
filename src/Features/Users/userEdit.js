@@ -16,7 +16,10 @@ import history from '../../utils/history';
 import useCustomer from '../../Hooks/useCustomer';
 
 const UserEdit = ({ match }) => {
-	const { isLoad, userData } = useCustomer(match.params.id);
+	const { isLoad, userData, setUsersData, updateUserData } = useCustomer(
+		match.params.id,
+	);
+
 	return (
 		<div>
 			<Card>
@@ -46,6 +49,9 @@ const UserEdit = ({ match }) => {
 												style={{ width: '60%' }}
 												type="text"
 												value={userData.gameId}
+												onChange={e =>
+													setUsersData({ ...userData, gameId: e.target.value })
+												}
 											/>
 										</Col>
 									</FormGroup>
@@ -55,6 +61,12 @@ const UserEdit = ({ match }) => {
 											<Input
 												style={{ width: '60%' }}
 												value={userData.fullname}
+												onChange={e =>
+													setUsersData({
+														...userData,
+														fullname: e.target.value,
+													})
+												}
 											/>
 										</Col>
 									</FormGroup>
@@ -65,6 +77,9 @@ const UserEdit = ({ match }) => {
 												style={{ width: '60%' }}
 												type="text"
 												value={userData.telno}
+												onChange={e =>
+													setUsersData({ ...userData, telno: e.target.value })
+												}
 											/>
 										</Col>
 									</FormGroup>
@@ -77,6 +92,15 @@ const UserEdit = ({ match }) => {
 											<Input
 												style={{ width: '60%' }}
 												value={userData.bank_info.bank_name}
+												onChange={e =>
+													setUsersData({
+														...userData,
+														bank_info: {
+															...userData.bank_info,
+															bank_name: e.target.value,
+														},
+													})
+												}
 											/>
 										</Col>
 									</FormGroup>
@@ -86,6 +110,15 @@ const UserEdit = ({ match }) => {
 											<Input
 												style={{ width: '60%' }}
 												value={userData.bank_info.bank_account_name}
+												onChange={e =>
+													setUsersData({
+														...userData,
+														bank_info: {
+															...userData.bank_info,
+															bank_account_name: e.target.value,
+														},
+													})
+												}
 											/>
 										</Col>
 									</FormGroup>
@@ -95,6 +128,15 @@ const UserEdit = ({ match }) => {
 											<Input
 												style={{ width: '60%' }}
 												value={userData.bank_info.bank_no}
+												onChange={e =>
+													setUsersData({
+														...userData,
+														bank_info: {
+															...userData.bank_info,
+															bank_no: e.target.value,
+														},
+													})
+												}
 											/>
 										</Col>
 									</FormGroup>
@@ -104,7 +146,13 @@ const UserEdit = ({ match }) => {
 					</div>
 				)}
 				<CardFooter>
-					<Button color="primary" style={{ float: 'Left' }}>
+					<Button
+						color="primary"
+						onClick={() => {
+							updateUserData();
+						}}
+						style={{ float: 'Left' }}
+					>
 						<i className="fa fa-floppy-o" /> บันทึกการแก้ไขข้อมูล
 					</Button>
 					<Button color="danger" style={{ float: 'Right' }}>
