@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'pretty-checkbox/src/pretty-checkbox.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
