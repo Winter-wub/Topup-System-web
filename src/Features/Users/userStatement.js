@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	Card,
 	CardHeader,
@@ -12,6 +12,8 @@ import {
 	Button,
 	Input,
 } from 'reactstrap';
+import moment from 'moment';
+
 import Searchbox from '../../Components/Searchbox';
 import history from '../../utils/history';
 import useCustomerStatement from '../../Hooks/useCustomerStatement';
@@ -30,9 +32,20 @@ const Status = ({ statusText }) => {
 
 const UsersStatementList = ({ match }) => {
 	const [searchKeyWord, setsearchKeyWord] = useState('');
-	const { isLoad, userStatementData } = useCustomerStatement(match.params.id);
+	const {
+		isFetchState,
+		userStatement,
+		currentTotal,
+		currentPromotionTotal,
+		currentAllTotal,
+		setCustomerId,
+	} = useCustomerStatement();
 	const { isLoad: isLoadUser, userData } = useCustomer(match.params.id);
-	const { statements, total, promotion_total } = userStatementData;
+
+	useEffect(() => {
+		setCustomerId(match.params.id);
+	}, []);
+
 	return (
 		<div>
 			<Card>
@@ -45,7 +58,7 @@ const UsersStatementList = ({ match }) => {
 					</Button>
 					Customer ID : <b>{match.params.id}</b>
 				</CardHeader>
-				{isLoad ? (
+				{isFetchState ? (
 					<CardBody>
 						<Progress animated value={100} />
 					</CardBody>
@@ -72,7 +85,11 @@ const UsersStatementList = ({ match }) => {
 									<FormGroup row>
 										<Label sm={2}>ยอดในระบบ</Label>
 										<Col sm={10}>
-											<Input style={{ width: '60%' }} value={total} disabled />
+											<Input
+												style={{ width: '60%' }}
+												value={currentTotal}
+												disabled
+											/>
 										</Col>
 									</FormGroup>
 									<FormGroup row>
@@ -80,7 +97,7 @@ const UsersStatementList = ({ match }) => {
 										<Col sm={10}>
 											<Input
 												style={{ width: '60%' }}
-												value={promotion_total}
+												value={currentPromotionTotal}
 												disabled
 											/>
 										</Col>
@@ -90,7 +107,7 @@ const UsersStatementList = ({ match }) => {
 										<Col sm={10}>
 											<Input
 												style={{ width: '60%' }}
-												value={total + promotion_total}
+												value={currentAllTotal}
 												disabled
 											/>
 										</Col>
@@ -116,13 +133,13 @@ const UsersStatementList = ({ match }) => {
 								</tr>
 							</thead>
 							<tbody>
-								{statements.map(state => (
-									<tr key={state.id}>
-										<td>{state.id}</td>
-										<td>{state.created_at}</td>
-										<td>{state.action.type}</td>
-										<td>{state.action.description}</td>
-										<td>{state.action.value} ฿</td>
+								{userStatement.map(state => (
+									<tr key={state._id}>
+										<td>{state._id}</td>
+										<td>{moment(state.created_at).calendar()}</td>
+										<td>{state.type}</td>
+										<td>{state.description}</td>
+										<td>{state.value} ฿</td>
 										<td>
 											<Status statusText={state.status} />
 										</td>
