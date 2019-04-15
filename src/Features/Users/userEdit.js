@@ -16,9 +16,13 @@ import history from '../../utils/history';
 import useCustomer from '../../Hooks/useCustomer';
 
 const UserEdit = ({ match }) => {
-	const { isLoad, userData, setUsersData, updateUserData } = useCustomer(
-		match.params.id,
-	);
+	const {
+		isLoad,
+		userData,
+		setUsersData,
+		updateUserData,
+		deleteUser,
+	} = useCustomer(match.params.id);
 
 	return (
 		<div>
@@ -155,7 +159,11 @@ const UserEdit = ({ match }) => {
 					>
 						<i className="fa fa-floppy-o" /> บันทึกการแก้ไขข้อมูล
 					</Button>
-					<Button color="danger" style={{ float: 'Right' }}>
+					<Button
+						color="danger"
+						style={{ float: 'Right' }}
+						onClick={() => deleteUser(match.params.id)}
+					>
 						<i className="fa fa-trash-o" /> ลบข้อมูลลูกค้า
 					</Button>
 				</CardFooter>

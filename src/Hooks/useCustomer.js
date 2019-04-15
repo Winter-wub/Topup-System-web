@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import axios from '../utils/axios';
+import history from '../utils/history';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 const swal = withReactContent(Swal);
 
 const useCustomer = id => {
-	const [userData, setUsersData] = useState({});
+	const [userData, setUsersData] = useState({
+		fullname: '',
+		gameId: '',
+	});
 	const [isLoad, setLoad] = useState(true);
 
 	const updateUserData = async () => {
@@ -41,11 +45,38 @@ const useCustomer = id => {
 		}
 	};
 
+	const deleteUser = async id => {
+		const prompt = await swal.fire({
+			titleText: 'ยืนยันการลยข้อมูลลูกค้า',
+			text: `ทำการลบข้อมูลแบบ soft delete  ${id}`,
+			showCancelButton: true,
+		});
+		if (prompt) {
+			try {
+				const { data: response } = await axios.delete(
+					`/api/v1/customers?id=${id}`,
+				);
+				if (response.data.status === true) {
+					await swal.fire('Result', 'ลบผู้ใช้เสร็จสมบูรณ์', 'info');
+					history.go('/customers');
+				}
+			} catch (error) {
+				console.log(error);
+				await swal.fire('Error', 'กรุณาลองใหม่อีกครั้งครับ', 'error');
+				history.go('/customers');
+			}
+		}
+	};
+
 	useEffect(() => {
 		axios
 			.get(`/api/v1/customers?filter={ "_id": "${id}"} `)
 			.then(({ data }) => {
-				setUsersData(data.data.customers[0]);
+				if (data.data.count <= 0) {
+					history.goBack();
+				} else {
+					setUsersData(data.data.customers[0]);
+				}
 				setLoad(false);
 			});
 	}, []);
@@ -55,6 +86,7 @@ const useCustomer = id => {
 		isLoad,
 		setUsersData,
 		updateUserData,
+		deleteUser,
 	};
 };
 

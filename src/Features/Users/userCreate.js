@@ -35,9 +35,10 @@ const UserCreate = () => {
 		gameId: false,
 		telno: false,
 	});
+
 	const checkGameIdExists = async gameId => {
 		const { data: Respone } = await axios.get(
-			`/api/v1/customers?filter={gameId:${gameId}}`,
+			`/api/v1/customers?filter=${JSON.stringify({ gameId: gameId })}`,
 		);
 		const { data } = Respone;
 		if (data.count > 0) {
@@ -50,7 +51,7 @@ const UserCreate = () => {
 
 	const validater = async (event, key = '') => {
 		const value = event.target.value;
-		setUserInfo({ ...userInfo, [key]: value });
+		setUserInfo({ ...userInfo, [key]: value.toString() });
 		if (key === 'gameId') {
 			if (value.length < 6 || checkGameIdExistsDebound(value)) {
 				setValidate({ ...validate, gameId: false });
@@ -91,6 +92,7 @@ const UserCreate = () => {
 				? 'สร้างข้อมูลลูกค้าสำเร็จ'
 				: 'สร้างข้อมูลลูกค้าไม่สำเร็จ';
 			await swal.fire('Result', text, 'info');
+			history.push('/customers');
 			setUserInfo(userInfoFormat);
 		} catch (err) {
 			console.log(err);
@@ -121,9 +123,10 @@ const UserCreate = () => {
 							<Col sm={10}>
 								<Input
 									style={{ width: '60%' }}
-									type="text"
+									type="number"
 									value={userInfo.gameId}
 									onChange={e => validater(e, 'gameId')}
+									min={6}
 								/>
 								{!validate.gameId && (
 									<div className="text-danger">
@@ -136,6 +139,7 @@ const UserCreate = () => {
 							<Label sm={2}>ชื่อ-นามสกุล</Label>
 							<Col sm={10}>
 								<Input
+									type="text"
 									style={{ width: '60%' }}
 									value={userInfo.fullname}
 									onChange={e => validater(e, 'fullname')}
@@ -152,9 +156,11 @@ const UserCreate = () => {
 							<Col sm={10}>
 								<Input
 									style={{ width: '60%' }}
-									type="text"
+									type="number"
 									value={userInfo.telno}
 									onChange={e => validater(e, 'telno')}
+									maxLength={10}
+									min={10}
 								/>
 								{!validate.telno && (
 									<div className="text-danger">ต้องเป็นตัวเลข 10 ตัว</div>
@@ -165,8 +171,8 @@ const UserCreate = () => {
 							<Label sm={2}>E-mail</Label>
 							<Col sm={10}>
 								<Input
+									type="email"
 									style={{ width: '60%' }}
-									type="text"
 									value={userInfo.email}
 									onChange={e => validater(e, 'email')}
 								/>

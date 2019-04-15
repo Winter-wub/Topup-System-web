@@ -36,6 +36,7 @@ const UsersList = () => {
 		order,
 		page,
 		setPage,
+		deleteUser,
 	} = useCustomers(10);
 
 	const header = [
@@ -120,7 +121,10 @@ const UsersList = () => {
 											>
 												<i className="fa fa-pencil" />
 											</Button>
-											<Button color="danger">
+											<Button
+												color="danger"
+												onClick={() => deleteUser(customer._id)}
+											>
 												<i className="fa fa-trash-o" />
 											</Button>
 										</div>
