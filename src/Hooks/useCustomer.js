@@ -9,7 +9,6 @@ const useCustomer = id => {
 		axios
 			.get(`/api/v1/customers?filter={ "_id": "${id}"} `)
 			.then(({ data }) => {
-				console.log(data.data);
 				setUsersData(data.data.customers[0]);
 				setLoad(false);
 			});

@@ -45,8 +45,6 @@ const UsersList = () => {
 		{ key: 'created_at', label: 'Register at' },
 	];
 
-	console.log(page);
-
 	return (
 		<Card>
 			<CardHeader>Customer Managerment</CardHeader>
@@ -80,6 +78,7 @@ const UsersList = () => {
 							<tr>
 								{header.map(head => (
 									<th
+										key={head.label}
 										onClick={() => {
 											setOrder(head.key);
 											setToggleAsc(!toggleAsc);
@@ -102,11 +101,7 @@ const UsersList = () => {
 									<td>{customer.gameId}</td>
 									<td>{customer.fullname}</td>
 									<td>{customer.telno}</td>
-									<td>
-										{moment(customer.created_at).format(
-											'MMMM Do YYYY, h:mm:ss a',
-										)}
-									</td>
+									<td>{moment(customer.created_at).calendar()}</td>
 									<td>
 										<div className="ActionMenu">
 											<Button
@@ -149,6 +144,7 @@ const UsersList = () => {
 							</Button>
 						</InputGroupAddon>
 						<Input
+							style={{ width: '60%' }}
 							type="number"
 							value={page}
 							onChange={e => {
