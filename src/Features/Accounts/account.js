@@ -39,7 +39,6 @@ const Account = () => {
 		description,
 		value,
 	} = useCustomerStatement();
-
 	const userOptions = customerList.map(customer => ({
 		value: customer._id,
 		label: customer.fullname,

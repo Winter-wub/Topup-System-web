@@ -17,6 +17,12 @@ const useCustomerStatement = () => {
 	const [currentAllTotal, setCurrentAllTotal] = useState(0);
 	const [description, setDescription] = useState('');
 	const [value, setValue] = useState(0);
+	const [page, setPage] = useState(1);
+	const [limit, setLimit] = useState(10);
+	const [search, setSearch] = useState('');
+	const [order, setOrder] = useState('');
+	const [toggleAsc, setToggleAsc] = useState(true);
+
 	const validate = !(
 		value > 0 &&
 		typeAction.length > 0 &&
@@ -68,18 +74,30 @@ const useCustomerStatement = () => {
 	};
 
 	useEffect(() => {
+		let url = `/api/v1/statements?id=${customerId}&page=${page}&limit=${limit}`;
 		setFetchState(true);
-		axios
-			.get(`/api/v1/statements?id=${customerId}`)
-			.then(({ data: response }) => {
-				const { total, promotion_total, statements } = response.data;
-				setCurrentTotal(total);
-				setCurrentPromotionTotal(promotion_total);
-				setCurrentAllTotal(total + promotion_total);
-				setUserStatement(statements);
-				setFetchState(false);
-			});
-	}, [customerId]);
+		setUserStatement([]);
+		if (search.length > 0) {
+			url += `&filter=${JSON.stringify({
+				description: search,
+			})}&options=like`;
+		}
+
+		if (order.length > 0) {
+			const orderValue = toggleAsc ? -1 : 1;
+			url += `&orderby=${JSON.stringify({ [order]: orderValue })}`;
+		}
+		console.log(url);
+
+		axios.get(url).then(({ data: response }) => {
+			const { total, promotion_total, statements } = response.data;
+			setCurrentTotal(total);
+			setCurrentPromotionTotal(promotion_total);
+			setCurrentAllTotal(total + promotion_total);
+			setUserStatement(statements);
+			setFetchState(false);
+		});
+	}, [customerId, page, limit, search, order, toggleAsc]);
 
 	return {
 		isFetchState,
@@ -100,6 +118,16 @@ const useCustomerStatement = () => {
 		amountPromo,
 		description,
 		value,
+		setPage,
+		setLimit,
+		page,
+		limit,
+		setSearch,
+		search,
+		order,
+		setOrder,
+		setToggleAsc,
+		toggleAsc,
 	};
 };
 

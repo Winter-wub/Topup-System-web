@@ -53,7 +53,7 @@ const UserCreate = () => {
 		const value = event.target.value;
 		setUserInfo({ ...userInfo, [key]: value.toString() });
 		if (key === 'gameId') {
-			if (value.length < 6 || checkGameIdExistsDebound(value)) {
+			if (value.length !== 8 || checkGameIdExistsDebound(value)) {
 				setValidate({ ...validate, gameId: false });
 			} else {
 				setValidate({ ...validate, gameId: true });
@@ -93,7 +93,6 @@ const UserCreate = () => {
 				: 'สร้างข้อมูลลูกค้าไม่สำเร็จ';
 			await swal.fire('Result', text, 'info');
 			history.push('/customers');
-			setUserInfo(userInfoFormat);
 		} catch (err) {
 			console.log(err);
 			await swal.fire(
@@ -119,18 +118,19 @@ const UserCreate = () => {
 					<h3 style={{ marginBottom: '10px' }}>ข้อมูลส่วนตัว</h3>
 					<Form>
 						<FormGroup row>
-							<Label sm={2}>ID</Label>
+							<Label sm={2}>App id</Label>
 							<Col sm={10}>
 								<Input
 									style={{ width: '60%' }}
 									type="number"
 									value={userInfo.gameId}
 									onChange={e => validater(e, 'gameId')}
-									min={6}
+									min={8}
+									maxLength={8}
 								/>
 								{!validate.gameId && (
 									<div className="text-danger">
-										ID ต้องมีตัวอักษรภาษาอังกฤษและมากกว่า 6 ตัว หรือมีคนใช้แล้ว
+										App ID ต้องมีตัวเลขเท่ากับ 8 ตัว หรือมีคนใช้แล้ว
 									</div>
 								)}
 							</Col>

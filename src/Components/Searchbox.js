@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Col, Label, Input, FormGroup } from 'reactstrap';
-const SearchBox = ({ handleChange, value, style }) => {
+const SearchBox = ({ handleChange, value, style, placeholder = 'search' }) => {
 	return (
 		<Form>
 			<FormGroup row>
@@ -13,7 +13,7 @@ const SearchBox = ({ handleChange, value, style }) => {
 						type="text"
 						value={value}
 						onChange={handleChange}
-						placeholder="Search"
+						placeholder={placeholder}
 					/>
 				</Col>
 			</FormGroup>

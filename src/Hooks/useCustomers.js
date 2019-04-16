@@ -14,22 +14,23 @@ const useCustomers = limit => {
 
 	const deleteUser = async id => {
 		const prompt = await swal.fire({
-			titleText: 'ยืนยันการลยข้อมูลลูกค้า',
-			text: `ทำการลบข้อมูลแบบ soft delete  ${id}`,
+			titleText: 'ยืนยันการลบข้อมูลลูกค้า',
+			text: ` แน่ใจแล้วใช้ไหมที่จะลบข้อมูล ${id}`,
+			type: 'question',
 			showCancelButton: true,
 		});
-		if (prompt) {
+		if (prompt.value) {
 			try {
 				const { data: response } = await axios.delete(
 					`/api/v1/customers?id=${id}`,
 				);
 				if (response.data.status === true) {
-					await swal.fire('Result', 'ลบผู้ใช้เสร็จสมบูรณ์', 'info');
+					await swal.fire('Result', 'ลบผู้ใช้เสร็จสมบูรณ์', 'success');
 					history.go('/customers');
 				}
 			} catch (error) {
 				console.log(error);
-				await swal.fire('Error', 'กรุณาลองใหม่อีกครั้งครับ', 'error');
+				await swal.fire('Error', 'กรุณาลองใหม่อีกครั้ง', 'error');
 				history.go('/customers');
 			}
 		}
@@ -47,9 +48,7 @@ const useCustomers = limit => {
 
 		if (order.length > 0) {
 			const orderValue = toggleAsc ? -1 : 1;
-			if (orderValue === -1) {
-				url += `&orderby=${JSON.stringify({ order: orderValue })}`;
-			}
+			url += `&orderby=${JSON.stringify({ [order]: orderValue })}`;
 		}
 		axios.get(url).then(({ data }) => {
 			const { data: responseData } = data;

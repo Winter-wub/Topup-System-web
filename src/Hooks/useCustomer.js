@@ -9,6 +9,7 @@ const useCustomer = id => {
 	const [userData, setUsersData] = useState({
 		fullname: '',
 		gameId: '',
+		bank_info: { bank: '', bank_account_name: '', bank_account_id: '' },
 	});
 	const [isLoad, setLoad] = useState(true);
 
@@ -47,17 +48,23 @@ const useCustomer = id => {
 
 	const deleteUser = async id => {
 		const prompt = await swal.fire({
-			titleText: 'ยืนยันการลยข้อมูลลูกค้า',
-			text: `ทำการลบข้อมูลแบบ soft delete  ${id}`,
+			titleText: 'ยืนยันการลบข้อมูลลูกค้า',
+			text: `แน่ใจแล้วใช้ไหมที่จะลบข้อมูล ${id}`,
+			type: 'question',
 			showCancelButton: true,
 		});
-		if (prompt) {
+		if (prompt.value) {
 			try {
 				const { data: response } = await axios.delete(
 					`/api/v1/customers?id=${id}`,
 				);
 				if (response.data.status === true) {
 					await swal.fire('Result', 'ลบผู้ใช้เสร็จสมบูรณ์', 'info');
+					setUsersData({
+						fullname: '',
+						gameId: '',
+						bank_info: { bank: '', bank_account_name: '', bank_account_id: '' },
+					});
 					history.go('/customers');
 				}
 			} catch (error) {

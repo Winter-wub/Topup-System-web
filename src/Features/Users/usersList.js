@@ -40,7 +40,7 @@ const UsersList = () => {
 	} = useCustomers(10);
 
 	const header = [
-		{ key: 'gameId', label: 'ID' },
+		{ key: 'gameId', label: 'App id' },
 		{ key: 'fullname', label: 'Full Name' },
 		{ key: 'telno', label: 'Tel No.' },
 		{ key: 'created_at', label: 'Register at' },
@@ -56,6 +56,7 @@ const UsersList = () => {
 							handleChange={e => setFilter(e.target.value)}
 							value={filter}
 							style={{ width: '100%' }}
+							placeholder="ค้นหาจากชื่อ"
 						/>
 					</Col>
 					<Col>

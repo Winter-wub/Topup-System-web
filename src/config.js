@@ -1,5 +1,5 @@
 const config = {
-	api_uri: 'http://localhost:2019',
+	api_uri: 'https://16166fbc.ngrok.io',
 };
 
 export default config;

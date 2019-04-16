@@ -95,13 +95,13 @@ const UserEdit = ({ match }) => {
 										<Col sm={10}>
 											<Input
 												style={{ width: '60%' }}
-												value={userData.bank_info.bank_name}
+												value={userData.bank_info.bank}
 												onChange={e =>
 													setUsersData({
 														...userData,
 														bank_info: {
 															...userData.bank_info,
-															bank_name: e.target.value,
+															bank: e.target.value,
 														},
 													})
 												}
@@ -131,13 +131,13 @@ const UserEdit = ({ match }) => {
 										<Col sm={10}>
 											<Input
 												style={{ width: '60%' }}
-												value={userData.bank_info.bank_no}
+												value={userData.bank_info.bank_account_id}
 												onChange={e =>
 													setUsersData({
 														...userData,
 														bank_info: {
 															...userData.bank_info,
-															bank_no: e.target.value,
+															bank_account_id: e.target.value,
 														},
 													})
 												}

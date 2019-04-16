@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
 	Card,
 	CardHeader,
@@ -11,9 +11,10 @@ import {
 	Col,
 	Button,
 	Input,
+	Row,
 } from 'reactstrap';
 import moment from 'moment';
-
+import Select from 'react-select';
 import Searchbox from '../../Components/Searchbox';
 import history from '../../utils/history';
 import useCustomerStatement from '../../Hooks/useCustomerStatement';
@@ -31,7 +32,6 @@ const Status = ({ statusText }) => {
 };
 
 const UsersStatementList = ({ match }) => {
-	const [searchKeyWord, setsearchKeyWord] = useState('');
 	const {
 		isFetchState,
 		userStatement,
@@ -39,12 +39,31 @@ const UsersStatementList = ({ match }) => {
 		currentPromotionTotal,
 		currentAllTotal,
 		setCustomerId,
+		setPage,
+		setLimit,
+		page,
+		limit,
+		search,
+		setSearch,
+		setOrder,
+		setToggleAsc,
+		order,
+		toggleAsc,
 	} = useCustomerStatement();
 	const { isLoad: isLoadUser, userData } = useCustomer(match.params.id);
-
 	useEffect(() => {
+		setLimit(5);
 		setCustomerId(match.params.id);
 	}, []);
+
+	const header = [
+		{ label: 'Statement ID', key: '_id' },
+		{ label: 'เวลา', key: 'created_at' },
+		{ label: 'Action', key: 'type' },
+		{ label: 'คำอธิบาย', key: 'description' },
+		{ label: 'มูลค่า', key: 'value' },
+		{ label: 'สถานะ', key: 'status' },
+	];
 
 	return (
 		<div>
@@ -56,82 +75,142 @@ const UsersStatementList = ({ match }) => {
 					>
 						<i className="fa fa-arrow-left" />
 					</Button>
-					Customer ID : <b>{match.params.id}</b>
+					App ID : <b>{userData.gameId}</b>
 				</CardHeader>
-				{isFetchState ? (
-					<CardBody>
-						<Progress animated value={100} />
-					</CardBody>
-				) : (
-					<CardBody style={{ paddingLeft: '3%' }}>
-						<h3 style={{ marginBottom: '10px' }}>ข้อมูล</h3>
-						{isLoadUser ? (
-							<CardBody>
-								<Progress animated value={100} />
-							</CardBody>
-						) : (
-							<CardBody>
-								<Form>
-									<FormGroup row>
-										<Label sm={2}>ชื่อ</Label>
-										<Col sm={10}>
-											<Input
-												style={{ width: '60%' }}
-												value={userData.fullname}
-												disabled
+				<CardBody style={{ paddingLeft: '3%' }}>
+					<h3 style={{ marginBottom: '10px' }}>ข้อมูล</h3>
+					{isLoadUser ? (
+						<CardBody>
+							<Progress animated value={100} />
+						</CardBody>
+					) : (
+						<CardBody>
+							<Form>
+								<FormGroup row>
+									<Label sm={2}>ชื่อ</Label>
+									<Col sm={10}>
+										<Input
+											style={{ width: '60%' }}
+											value={userData.fullname}
+											disabled
+										/>
+									</Col>
+								</FormGroup>
+								<FormGroup row>
+									<Label sm={2}>ยอดในระบบ</Label>
+									<Col sm={10}>
+										<Input
+											style={{ width: '60%' }}
+											value={currentTotal}
+											disabled
+										/>
+									</Col>
+								</FormGroup>
+								<FormGroup row>
+									<Label sm={2}>ยอดจากโปรโมชั่น</Label>
+									<Col sm={10}>
+										<Input
+											style={{ width: '60%' }}
+											value={currentPromotionTotal}
+											disabled
+										/>
+									</Col>
+								</FormGroup>
+								<FormGroup row>
+									<Label sm={2}>ยอดสุทธิ</Label>
+									<Col sm={10}>
+										<Input
+											style={{ width: '60%' }}
+											value={currentAllTotal}
+											disabled
+										/>
+									</Col>
+								</FormGroup>
+							</Form>
+						</CardBody>
+					)}
+					<h3 style={{ marginBottom: '10px' }}>ประวัติการฝาก และถอน</h3>
+					<Row>
+						<Col>
+							<Searchbox
+								handleChange={e => setSearch(e.target.value)}
+								value={search}
+								style={{ width: '90%' }}
+								placeholder="ค้นหาจากคำอธิบาย"
+							/>
+						</Col>
+						<Col>
+							<Row>
+								<Col>
+									<Select
+										options={[
+											{ label: '5', value: 5 },
+											{ label: '10', value: 10 },
+											{ label: '15', value: 15 },
+											{ label: '20', value: 20 },
+										]}
+										placeholder="จำนวนรายการต่อหน้า"
+										defaultValue={5}
+										onChange={e => setLimit(e.value)}
+										value={limit}
+									/>
+								</Col>
+								<Col>
+									<div style={{ float: 'right' }}>
+										<Button
+											disabled={page <= 1}
+											onClick={() => setPage(page - 1)}
+											style={{ marginRight: '2px' }}
+										>
+											<i className="fa fa-arrow-left" />
+										</Button>
+										<Button
+											onClick={() => setPage(page + 1)}
+											style={{ marginLeft: '2px' }}
+										>
+											<i className="fa fa-arrow-right" />
+										</Button>
+									</div>
+								</Col>
+							</Row>
+						</Col>
+					</Row>
+
+					<Table>
+						<thead>
+							<tr>
+								{header.map(head => (
+									<th
+										key={head.label}
+										onClick={() => {
+											setOrder(head.key);
+											setToggleAsc(!toggleAsc);
+										}}
+									>
+										{head.label}
+										{order === head.key && (
+											<i
+												className={`fa fa-arrow-${toggleAsc ? 'down' : 'up'}`}
 											/>
-										</Col>
-									</FormGroup>
-									<FormGroup row>
-										<Label sm={2}>ยอดในระบบ</Label>
-										<Col sm={10}>
-											<Input
-												style={{ width: '60%' }}
-												value={currentTotal}
-												disabled
-											/>
-										</Col>
-									</FormGroup>
-									<FormGroup row>
-										<Label sm={2}>ยอดจากโปรโมชั่น</Label>
-										<Col sm={10}>
-											<Input
-												style={{ width: '60%' }}
-												value={currentPromotionTotal}
-												disabled
-											/>
-										</Col>
-									</FormGroup>
-									<FormGroup row>
-										<Label sm={2}>ยอดสุทธิ</Label>
-										<Col sm={10}>
-											<Input
-												style={{ width: '60%' }}
-												value={currentAllTotal}
-												disabled
-											/>
-										</Col>
-									</FormGroup>
-								</Form>
-							</CardBody>
-						)}
-						<h3 style={{ marginBottom: '10px' }}>ประวัติการฝาก และถอน</h3>
-						<Searchbox
-							handleChange={e => setsearchKeyWord(e.target.value)}
-							value={searchKeyWord}
-							style={{ width: '60%' }}
-						/>
-						<Table>
-							<thead>
+										)}
+									</th>
+								))}
+							</tr>
+						</thead>
+						{isFetchState ? (
+							<tbody>
 								<tr>
-									<th>Statement ID</th>
-									<th>เวลา</th>
-									<th>การกระทำ</th>
-									<th>คำอธิบาย</th>
-									<th>มูลค่า</th>
-									<th>สถานะ</th>
+									<td />
+									<td />
+									<td>
+										<Progress style={{ width: '100%' }} animated value={100} />
+									</td>
+									<td />
+									<td />
+									<td />
 								</tr>
-							</thead>
+							</tbody>
+						) : (
 							<tbody>
 								{userStatement.map(state => (
 									<tr key={state._id}>
@@ -146,9 +225,9 @@ const UsersStatementList = ({ match }) => {
 									</tr>
 								))}
 							</tbody>
-						</Table>
-					</CardBody>
-				)}
+						)}
+					</Table>
+				</CardBody>
 			</Card>
 		</div>
 	);
