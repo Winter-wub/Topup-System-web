@@ -13,6 +13,7 @@ import {
 	InputGroup,
 	InputGroupAddon,
 } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -60,14 +61,19 @@ const UsersList = () => {
 						/>
 					</Col>
 					<Col>
-						<Button
-							style={{ float: 'right' }}
-							color="success"
-							onClick={() => history.push('/create/customer')}
-						>
-							<i className="fa fa-user-plus" aria-hidden="true" /> Create New
-							Customer
-						</Button>
+						<div style={{ float: 'right' }}>
+							<Button
+								color="success"
+								style={{ marginRight: '2px' }}
+								onClick={() => history.push('/create/customer')}
+							>
+								<i className="fa fa-user-plus" aria-hidden="true" /> Create New
+								Customer
+							</Button>
+							<NavLink to="account" className="btn btn-primary">
+								<i className="fa fa-list-alt" /> Create Statement
+							</NavLink>
+						</div>
 					</Col>
 				</Row>
 			</div>

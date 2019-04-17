@@ -15,7 +15,7 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import { Checkbox } from 'pretty-checkbox-react';
-
+import history from '../../utils/history';
 import useCustomers from '../../Hooks/useCustomers';
 import useCustomerStatement from '../../Hooks/useCustomerStatement';
 const Account = () => {
@@ -52,7 +52,12 @@ const Account = () => {
 
 	return (
 		<Card>
-			<CardHeader>การจัดการเงินฝาก - ถอน</CardHeader>
+			<CardHeader>
+				<Button style={{ marginRight: '2%' }} onClick={() => history.goBack()}>
+					<i className="fa fa-arrow-left" /> Cancel
+				</Button>
+				การจัดการเงินฝาก - ถอน
+			</CardHeader>
 			<CardBody>
 				<Form>
 					<FormGroup row>

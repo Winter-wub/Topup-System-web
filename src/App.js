@@ -1,22 +1,24 @@
 import React, { useEffect, useGlobal } from 'reactn';
 import { Container, Navbar, NavbarBrand, Nav, NavItem } from 'reactstrap';
-import history from './utils/history';
 import { Router, Route, NavLink } from 'react-router-dom';
+import Cookie from 'universal-cookie';
+
 import Authentication from './Features/Authentication/authentication';
 import Users from './Features/Customers/usersList';
 import UserEdit from './Features/Customers/userEdit';
 import UsersStatementList from './Features/Customers/userStatement';
 import UserCreate from './Features/Customers/userCreate';
 import AccountManager from './Features/Accounts/account';
+import history from './utils/history';
 
+const cookie = new Cookie();
 const Home = () => {
-	const [isLogin] = useGlobal('isLogin');
-	return <div>{JSON.stringify(isLogin)}</div>;
+	return <div />;
 };
 
 const NavbarItem = [
 	{ link: '/customers', icon: 'fa fa-users', label: 'Customers Manager' },
-	{ link: '/account', icon: 'fa fa-list-alt', label: 'Account Manager' },
+	{ link: '/dashboard', icon: 'fa fa-list-alt', label: 'Dash Board' },
 ];
 
 const App = () => {
@@ -24,8 +26,8 @@ const App = () => {
 	const [, setRole] = useGlobal('role');
 
 	useEffect(() => {
-		const token = window.localStorage.getItem('token');
-		const role = window.localStorage.getItem('role');
+		const token = cookie.get('token');
+		const role = cookie.get('role');
 		if (!token) {
 			history.push('/login');
 		} else {
