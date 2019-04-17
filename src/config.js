@@ -1,5 +1,12 @@
+const env = process.env.PRODUCTION ? 'production': 'dev';
 const config = {
-	api_uri: 'https://16166fbc.ngrok.io',
+	dev: {
+	api_uri: 'http://localhost:2019',
+
+	},
+	production: {
+
+	}
 };
 
-export default config;
+export default config[`${env}`];

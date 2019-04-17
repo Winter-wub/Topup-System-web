@@ -50,11 +50,16 @@ const useCustomers = limit => {
 			const orderValue = toggleAsc ? -1 : 1;
 			url += `&orderby=${JSON.stringify({ [order]: orderValue })}`;
 		}
-		axios.get(url).then(({ data }) => {
-			const { data: responseData } = data;
-			setLoad(false);
-			setCustomerList(responseData.customers);
-		});
+		axios
+			.get(url)
+			.then(({ data }) => {
+				const { data: responseData } = data;
+				setLoad(false);
+				setCustomerList(responseData.customers);
+			})
+			.catch(err => {
+				console.log(err);
+			});
 	}, [page, filter, order, toggleAsc]);
 
 	return {

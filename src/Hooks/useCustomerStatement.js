@@ -87,16 +87,17 @@ const useCustomerStatement = () => {
 			const orderValue = toggleAsc ? -1 : 1;
 			url += `&orderby=${JSON.stringify({ [order]: orderValue })}`;
 		}
-		console.log(url);
-
-		axios.get(url).then(({ data: response }) => {
-			const { total, promotion_total, statements } = response.data;
-			setCurrentTotal(total);
-			setCurrentPromotionTotal(promotion_total);
-			setCurrentAllTotal(total + promotion_total);
-			setUserStatement(statements);
-			setFetchState(false);
-		});
+		axios
+			.get(url)
+			.then(({ data: response }) => {
+				const { total, promotion_total, statements } = response.data;
+				setCurrentTotal(total);
+				setCurrentPromotionTotal(promotion_total);
+				setCurrentAllTotal(total + promotion_total);
+				setUserStatement(statements);
+				setFetchState(false);
+			})
+			.catch(error => {});
 	}, [customerId, page, limit, search, order, toggleAsc]);
 
 	return {

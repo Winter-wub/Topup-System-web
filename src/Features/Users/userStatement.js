@@ -87,6 +87,16 @@ const UsersStatementList = ({ match }) => {
 						<CardBody>
 							<Form>
 								<FormGroup row>
+									<Label sm={2}>App gameId</Label>
+									<Col sm={10}>
+										<Input
+											style={{ width: '60%' }}
+											value={userData.gameId}
+											disabled
+										/>
+									</Col>
+								</FormGroup>
+								<FormGroup row>
 									<Label sm={2}>ชื่อ</Label>
 									<Col sm={10}>
 										<Input

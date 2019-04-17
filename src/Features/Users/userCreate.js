@@ -26,6 +26,7 @@ const userInfoFormat = () => ({
 	bank_name: '',
 	bank_account_name: '',
 	bank_account_id: '',
+	remark: '',
 });
 
 const UserCreate = () => {
@@ -83,6 +84,7 @@ const UserCreate = () => {
 				bank: userInfo.bank_name,
 				bank_account_name: userInfo.bank_account_name,
 				bank_account_id: userInfo.bank_account_id,
+				remark: userInfo.remark,
 			};
 			const { data: response } = await axios.post('/api/v1/customers', {
 				data: postData,
@@ -114,108 +116,122 @@ const UserCreate = () => {
 				<b>การสร้างข้อมูลลูกค้าใหม่</b>
 			</CardHeader>
 			<CardBody>
-				<div>
-					<h3 style={{ marginBottom: '10px' }}>ข้อมูลส่วนตัว</h3>
-					<Form>
-						<FormGroup row>
-							<Label sm={2}>App id</Label>
-							<Col sm={10}>
-								<Input
-									style={{ width: '60%' }}
-									type="number"
-									value={userInfo.gameId}
-									onChange={e => validater(e, 'gameId')}
-									min={8}
-									maxLength={8}
-								/>
-								{!validate.gameId && (
-									<div className="text-danger">
-										App ID ต้องมีตัวเลขเท่ากับ 8 ตัว หรือมีคนใช้แล้ว
-									</div>
-								)}
-							</Col>
-						</FormGroup>
-						<FormGroup row>
-							<Label sm={2}>ชื่อ-นามสกุล</Label>
-							<Col sm={10}>
-								<Input
-									type="text"
-									style={{ width: '60%' }}
-									value={userInfo.fullname}
-									onChange={e => validater(e, 'fullname')}
-								/>
-								{!validate.fullname && (
-									<div className="text-danger">
-										ต้องมีตัวอักษรและมากกว่า 6 ตัว
-									</div>
-								)}
-							</Col>
-						</FormGroup>
-						<FormGroup row>
-							<Label sm={2}>เบอร์โทร</Label>
-							<Col sm={10}>
-								<Input
-									style={{ width: '60%' }}
-									type="number"
-									value={userInfo.telno}
-									onChange={e => validater(e, 'telno')}
-									maxLength={10}
-									min={10}
-								/>
-								{!validate.telno && (
-									<div className="text-danger">ต้องเป็นตัวเลข 10 ตัว</div>
-								)}
-							</Col>
-						</FormGroup>
-						<FormGroup row>
-							<Label sm={2}>E-mail</Label>
-							<Col sm={10}>
-								<Input
-									type="email"
-									style={{ width: '60%' }}
-									value={userInfo.email}
-									onChange={e => validater(e, 'email')}
-								/>
-							</Col>
-						</FormGroup>
-					</Form>
-					<h3 style={{ marginBottom: '10px' }}>ข้อมูลธนาคาร</h3>
-					<Form>
-						<FormGroup row>
-							<Label sm={2}>ธนาคาร</Label>
-							<Col sm={10}>
-								<Input
-									style={{ width: '60%' }}
-									type="text"
-									value={userInfo.bank_name}
-									onChange={e => validater(e, 'bank_name')}
-								/>
-							</Col>
-						</FormGroup>
-						<FormGroup row>
-							<Label sm={2}>ชื่อบัญชี</Label>
-							<Col sm={10}>
-								<Input
-									style={{ width: '60%' }}
-									type="text"
-									value={userInfo.bank_account_name}
-									onChange={e => validater(e, 'bank_account_name')}
-								/>
-							</Col>
-						</FormGroup>
-						<FormGroup row>
-							<Label sm={2}>หมายเลขบัญชี</Label>
-							<Col sm={10}>
-								<Input
-									type="text"
-									style={{ width: '60%' }}
-									value={userInfo.bank_account_id}
-									onChange={e => validater(e, 'bank_account_id')}
-								/>
-							</Col>
-						</FormGroup>
-					</Form>
-				</div>
+				<h3 style={{ marginBottom: '10px' }}>ข้อมูลส่วนตัว</h3>
+				<Form>
+					<FormGroup row>
+						<Label sm={2}>App id*</Label>
+						<Col sm={10}>
+							<Input
+								style={{ width: '60%' }}
+								type="number"
+								value={userInfo.gameId}
+								onChange={e => {
+									if (e.target.value.length <= 8) validater(e, 'gameId');
+								}}
+								min={8}
+								maxLength={8}
+							/>
+							{!validate.gameId && (
+								<div className="text-danger">
+									App ID ต้องมีตัวเลขเท่ากับ 8 ตัว หรือมีคนใช้แล้ว
+								</div>
+							)}
+						</Col>
+					</FormGroup>
+					<FormGroup row>
+						<Label sm={2}>ชื่อ-นามสกุล*</Label>
+						<Col sm={10}>
+							<Input
+								type="text"
+								style={{ width: '60%' }}
+								value={userInfo.fullname}
+								onChange={e => validater(e, 'fullname')}
+							/>
+							{!validate.fullname && (
+								<div className="text-danger">
+									ต้องมีตัวอักษรและมากกว่า 6 ตัว
+								</div>
+							)}
+						</Col>
+					</FormGroup>
+					<FormGroup row>
+						<Label sm={2}>เบอร์โทร*</Label>
+						<Col sm={10}>
+							<Input
+								style={{ width: '60%' }}
+								type="number"
+								value={userInfo.telno}
+								onChange={e => {
+									if (e.target.value.length < 11) validater(e, 'telno');
+								}}
+								maxLength={10}
+								min={10}
+							/>
+							{!validate.telno && (
+								<div className="text-danger">ต้องเป็นตัวเลข 10 ตัว</div>
+							)}
+						</Col>
+					</FormGroup>
+					<FormGroup row>
+						<Label sm={2}>E-mail</Label>
+						<Col sm={10}>
+							<Input
+								type="email"
+								style={{ width: '60%' }}
+								value={userInfo.email}
+								onChange={e => validater(e, 'email')}
+							/>
+						</Col>
+					</FormGroup>
+					<FormGroup row>
+						<Label sm={2}>Remark</Label>
+						<Col sm={10}>
+							<Input
+								type="email"
+								style={{ width: '60%' }}
+								value={userInfo.remark}
+								onChange={e => validater(e, 'remark')}
+							/>
+						</Col>
+					</FormGroup>
+				</Form>
+				<h3 style={{ marginBottom: '10px' }}>ข้อมูลธนาคาร</h3>
+				<Form>
+					<FormGroup row>
+						<Label sm={2}>ธนาคาร</Label>
+						<Col sm={10}>
+							<Input
+								style={{ width: '60%' }}
+								type="text"
+								value={userInfo.bank_name}
+								onChange={e => validater(e, 'bank_name')}
+							/>
+						</Col>
+					</FormGroup>
+					<FormGroup row>
+						<Label sm={2}>ชื่อบัญชี</Label>
+						<Col sm={10}>
+							<Input
+								style={{ width: '60%' }}
+								type="text"
+								value={userInfo.bank_account_name}
+								onChange={e => validater(e, 'bank_account_name')}
+							/>
+						</Col>
+					</FormGroup>
+					<FormGroup row>
+						<Label sm={2}>หมายเลขบัญชี</Label>
+						<Col sm={10}>
+							<Input
+								type="text"
+								style={{ width: '60%' }}
+								value={userInfo.bank_account_id}
+								onChange={e => validater(e, 'bank_account_id')}
+							/>
+						</Col>
+					</FormGroup>
+				</Form>
+				<div>(* จำเป็นต้องกรอก )</div>
 			</CardBody>
 			<CardFooter>
 				<Button

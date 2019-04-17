@@ -87,6 +87,32 @@ const UserEdit = ({ match }) => {
 											/>
 										</Col>
 									</FormGroup>
+									<FormGroup row>
+										<Label sm={2}>Email</Label>
+										<Col sm={10}>
+											<Input
+												style={{ width: '60%' }}
+												type="text"
+												value={userData.email}
+												onChange={e =>
+													setUsersData({ ...userData, email: e.target.value })
+												}
+											/>
+										</Col>
+									</FormGroup>
+									<FormGroup row>
+										<Label sm={2}>Remark</Label>
+										<Col sm={10}>
+											<Input
+												style={{ width: '60%' }}
+												type="text"
+												value={userData.remark}
+												onChange={e =>
+													setUsersData({ ...userData, remark: e.target.value })
+												}
+											/>
+										</Col>
+									</FormGroup>
 								</Form>
 								<h3 style={{ marginBottom: '10px' }}>ข้อมูลธนาคาร</h3>
 								<Form>

@@ -85,6 +85,9 @@ const useCustomer = id => {
 					setUsersData(data.data.customers[0]);
 				}
 				setLoad(false);
+			})
+			.catch(err => {
+				console.log(err);
 			});
 	}, []);
 
