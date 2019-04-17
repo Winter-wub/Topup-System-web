@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useEffect, useGlobal } from 'reactn';
 import { Container, Navbar, NavbarBrand, Nav, NavItem } from 'reactstrap';
 import history from './utils/history';
 import { Router, Route, NavLink } from 'react-router-dom';
-import Users from './Features/Users/usersList';
-import UserEdit from './Features/Users/userEdit';
-import UsersStatementList from './Features/Users/userStatement';
-import UserCreate from './Features/Users/userCreate';
+import Authentication from './Features/Authentication/authentication';
+import Users from './Features/Customers/usersList';
+import UserEdit from './Features/Customers/userEdit';
+import UsersStatementList from './Features/Customers/userStatement';
+import UserCreate from './Features/Customers/userCreate';
 import AccountManager from './Features/Accounts/account';
 
 const Home = () => {
-	return <div />;
+	const [isLogin] = useGlobal('isLogin');
+	return <div>{JSON.stringify(isLogin)}</div>;
 };
 
 const NavbarItem = [
@@ -18,9 +20,23 @@ const NavbarItem = [
 ];
 
 const App = () => {
+	const [isLogin, setLogin] = useGlobal('isLogin');
+	const [, setRole] = useGlobal('role');
+
+	useEffect(() => {
+		const token = window.localStorage.getItem('token');
+		const role = window.localStorage.getItem('role');
+		if (!token) {
+			history.push('/login');
+		} else {
+			setLogin(true);
+			setRole(role);
+		}
+	}, []);
+
 	return (
-		<div>
-			<Router history={history}>
+		<Router history={history}>
+			{isLogin && (
 				<Navbar color="light" light expand="md">
 					<NavbarBrand href="/" />
 					<Nav className="ml-auto" navbar>
@@ -33,17 +49,19 @@ const App = () => {
 						))}
 					</Nav>
 				</Navbar>
-
-				<Container style={{ marginTop: '1%' }}>
+			)}
+			<Container>
+				<div style={{ marginTop: '2%' }}>
 					<Route path="/" exact component={Home} />
 					<Route path="/customers" component={Users} />
 					<Route path="/create/customer" component={UserCreate} />
 					<Route path="/customer/:id" component={UserEdit} />
 					<Route path="/statement/:id" component={UsersStatementList} />
 					<Route path="/account" component={AccountManager} />
-				</Container>
-			</Router>
-		</div>
+				</div>
+			</Container>
+			<Route path="/login" component={Authentication} />
+		</Router>
 	);
 };
 

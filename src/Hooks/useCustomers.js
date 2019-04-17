@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import history from '../utils/history';
 const swal = withReactContent(Swal);
-const useCustomers = limit => {
+const useCustomers = (limit = 10) => {
 	const [isLoad, setLoad] = useState(true);
 	const [customerList, setCustomerList] = useState([]);
 	const [filter, setFilter] = useState('');

@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { setGlobal } from 'reactn';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'pretty-checkbox/src/pretty-checkbox.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+
+setGlobal({
+	isLogin: false,
+	role: 1,
+});
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

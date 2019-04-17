@@ -19,7 +19,7 @@ import { Checkbox } from 'pretty-checkbox-react';
 import useCustomers from '../../Hooks/useCustomers';
 import useCustomerStatement from '../../Hooks/useCustomerStatement';
 const Account = () => {
-	const { isLoad: CustomerListLoad, customerList } = useCustomers();
+	const { isLoad: CustomerListLoad, customerList } = useCustomers(0);
 	const {
 		isFetchState,
 		setTypeAction,
