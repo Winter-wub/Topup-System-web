@@ -179,10 +179,9 @@ const useCustomerStatement = () => {
 			.get(url)
 			.then(({ data: response }) => {
 				const { total, promotion_total, statements } = response.data;
-				console.log(promotion_total);
-				setCurrentTotal(parseFloat(total) || 0);
-				setCurrentPromotionTotal(parseFloat(promotion_total) || 0);
-				setCurrentAllTotal(parseFloat(total + promotion_total) || 0);
+				setCurrentTotal(parseFloat(total));
+				setCurrentPromotionTotal(parseFloat(promotion_total));
+				setCurrentAllTotal(parseFloat(total + promotion_total));
 				setUserStatement(statements);
 				setFetchState(false);
 			})
