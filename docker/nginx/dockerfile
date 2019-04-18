@@ -1,0 +1,4 @@
+FROM nginx:1.15.12-alpine
+RUN apk add nodejs-current
+RUN apk add --update npm
+RUN npm install -g yarn
