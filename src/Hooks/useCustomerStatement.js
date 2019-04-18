@@ -119,31 +119,34 @@ const useCustomerStatement = () => {
 			}
 		} else {
 			const { value: prompt } = await swal.fire({
-				titleText: 'การยืนยันอนุมัติรายการ',
+				titleText: 'การยืนยันไม่อนุมัติรายการ',
 				text: 'ใส่ Remark',
 				showCancelButton: true,
 				input: 'text',
-				inputValue: 'key',
+				inputValue: '',
 				inputPlaceholder: 'กรอกคีย์เวิร์ด หรือช่วยจำ',
 			});
 
 			if (prompt) {
 				try {
-					const { data: Response } = await axios.delete('/api/v1/statements', {
-						data: {
-							staffId: staffId,
-							statement_id: statement_id,
-							remark: prompt,
+					const { data: Response } = await axios.put(
+						'/api/v1/statements/delete',
+						{
+							data: {
+								staffId: staffId,
+								statement_id: statement_id,
+								remark: prompt,
+							},
 						},
-					});
+					);
 					const { data } = Response;
 					if (data.status) {
-						await swal.fire('ผลลัพธ์', 'การยกเลิกสำเร็จ', 'success');
-						history.push('/accounts');
+						await swal.fire('ผลลัพธ์', 'การไม่อนุมัติรายการสำเร็จ', 'success');
+						history.goBack();
 					} else {
 						await swal.fire(
 							'ผลลัพธ์',
-							'รายการนี้ไม่สามารถยกเลิกได้',
+							'รายการนี้ไม่สามารถยกเลิกอนุมัติได้',
 							'warning',
 						);
 					}
@@ -183,10 +186,12 @@ const useCustomerStatement = () => {
 				setCurrentPromotionTotal(parseFloat(promotion_total));
 				setCurrentAllTotal(parseFloat(total + promotion_total));
 				setUserStatement(statements);
-				setFetchState(false);
 			})
 			.catch(error => {
 				console.log(error);
+			})
+			.finally(() => {
+				setFetchState(false);
 			});
 	}, [customerId, page, limit, search, order, toggleAsc, like]);
 

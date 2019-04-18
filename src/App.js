@@ -18,6 +18,9 @@ import UserEdit from './Features/Customers/userEdit';
 import UsersStatementList from './Features/Customers/userStatement';
 import UserCreate from './Features/Customers/userCreate';
 import AccountCreate from './Features/Accounts/accountCreate';
+import Admin_Usermanager from './Features/Admins/userlist';
+import Admin_UserEdit from './Features/Admins/userEdit';
+import Admin_UserCreate from './Features/Admins/userCreate';
 import history from './utils/history';
 
 import useAuthentication from './Hooks/useAuthentication';
@@ -29,12 +32,10 @@ const Home = () => {
 const NavbarItem = [
 	{ link: '/dashboard', icon: 'fa fa-line-chart', label: 'Dashboard' },
 	{ link: '/customers', icon: 'fa fa-users', label: 'Customers Manager' },
-	{ link: '/accounts', icon: 'fa fa-list-alt', label: 'Statement Manager' },
 ];
-
 const App = () => {
 	const [isLogin, setLogin] = useGlobal('isLogin');
-	const [, setRole] = useGlobal('role');
+	const [roleState, setRole] = useGlobal('role');
 	const [username, setUsername] = useGlobal('username');
 	const [, setToken] = useGlobal('token');
 	const { logout } = useAuthentication();
@@ -74,6 +75,20 @@ const App = () => {
 								</NavLink>
 							</NavItem>
 						))}
+						{roleState === '99' && (
+							<NavItem>
+								<NavLink className="nav-link" to="users">
+									<i className="fa fa-user-secret" /> Admin Panel
+								</NavLink>
+							</NavItem>
+						)}
+						{roleState === '99' && (
+							<NavItem>
+								<NavLink className="nav-link" to="accounts">
+									<i className="fa fa-list-alt" /> Statement Manager
+								</NavLink>
+							</NavItem>
+						)}
 					</Nav>
 				</Navbar>
 			)}
@@ -87,6 +102,9 @@ const App = () => {
 					<Route path="/statement/:id" component={UsersStatementList} />
 					<Route path="/account" component={AccountCreate} />
 					<Route path="/accounts" component={AccountManager} />
+					<Route path="/users" component={Admin_Usermanager} />
+					<Route path="/user/:id" component={Admin_UserEdit} />
+					<Route path="/create/user" component={Admin_UserCreate} />
 				</div>
 			</Container>
 			<Route path="/login" component={Authentication} />

@@ -26,7 +26,6 @@ const useAuthentication = () => {
 				},
 			})
 			.then(({ data: Response }) => {
-				setIsload(false);
 				const { data } = Response;
 				if (data.status === true) {
 					cookie.set('token', data.token);
@@ -38,6 +37,7 @@ const useAuthentication = () => {
 					setStateUsername(data.username);
 					swal.fire('Login', 'Login In สำเร็จ', 'success').then(() => {
 						history.push('/dashboard');
+						window.location.reload();
 					});
 				} else {
 					swal.fire('Login', 'Username หรือ  Password ผิด', 'warning');
@@ -46,6 +46,9 @@ const useAuthentication = () => {
 			.catch(err => {
 				console.log(err);
 				swal.fire('Login', 'เกิดข้อผิดพลาดไม่สามารถติดต่อ API ได้', 'error');
+			})
+			.finally(() => {
+				setIsload(false);
 			});
 	};
 

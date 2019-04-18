@@ -36,6 +36,8 @@ const UsersList = () => {
 		order,
 		isFetchState,
 		setLimit,
+		setPage,
+		page,
 	} = useCustomerStatement();
 	const header = [
 		{ key: 'gameId', label: 'App id' },
@@ -96,7 +98,7 @@ const UsersList = () => {
 							{userStatement.map(state => (
 								<tr key={state._id}>
 									<td>{state.customer_id}</td>
-									<td>{moment(state.created_at).calendar()}</td>
+									<td>{moment(state.created_at).format('DD/MM/YYYY hh:mm')}</td>
 									<td>{state.type}</td>
 									<td>{state.staffId}</td>
 									<td>
@@ -118,7 +120,23 @@ const UsersList = () => {
 					)}
 				</Table>
 			</CardBody>
-			<CardFooter />
+			<CardFooter>
+				<div style={{ float: 'left' }}>
+					<Button
+						disabled={page <= 1}
+						onClick={() => setPage(page - 1)}
+						style={{ marginRight: '2px' }}
+					>
+						<i className="fa fa-arrow-left" />
+					</Button>
+					<Button
+						onClick={() => setPage(page + 1)}
+						style={{ marginLeft: '2px' }}
+					>
+						<i className="fa fa-arrow-right" />
+					</Button>
+				</div>
+			</CardFooter>
 		</Card>
 	);
 };
