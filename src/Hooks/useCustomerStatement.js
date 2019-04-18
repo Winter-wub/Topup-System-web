@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useGlobal } from 'reactn';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import axios from '../utils/axios';
@@ -22,6 +22,7 @@ const useCustomerStatement = () => {
 	const [search, setSearch] = useState('');
 	const [order, setOrder] = useState('');
 	const [toggleAsc, setToggleAsc] = useState(true);
+	const [username] = useGlobal('username');
 
 	const validate = !(
 		value > 0 &&
@@ -37,7 +38,8 @@ const useCustomerStatement = () => {
 					type: typeAction,
 					value: parseFloat(value),
 					description: description,
-					staffId: '1111',
+					staffId: username,
+					status: 'not approve',
 				},
 			})
 			.then(({ data: Response }) => {

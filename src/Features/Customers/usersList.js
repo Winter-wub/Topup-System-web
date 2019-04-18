@@ -49,7 +49,9 @@ const UsersList = () => {
 
 	return (
 		<Card>
-			<CardHeader>Customer Managerment</CardHeader>
+			<CardHeader>
+				<b>Customer Managerment</b>
+			</CardHeader>
 			<div style={{ marginTop: '1%', marginLeft: '3%', marginRight: '3%' }}>
 				<Row>
 					<Col>

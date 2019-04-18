@@ -8,6 +8,9 @@ import * as serviceWorker from './serviceWorker';
 setGlobal({
 	isLogin: false,
 	role: 1,
+	staffid: '',
+	username: '',
+	token: '',
 });
 
 ReactDOM.render(<App />, document.getElementById('root'));
