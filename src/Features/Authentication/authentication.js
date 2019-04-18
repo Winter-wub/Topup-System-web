@@ -21,6 +21,7 @@ const Authentication = () => {
 		password,
 		username,
 		Login,
+		isLoad,
 	} = useAuthentication();
 
 	return (
@@ -53,7 +54,9 @@ const Authentication = () => {
 					</Form>
 				</CardBody>
 				<CardFooter>
-					<Button onClick={() => Login()}>Login</Button>
+					<Button disabled={isLoad} onClick={() => Login()}>
+						Login
+					</Button>
 				</CardFooter>
 			</Card>
 		</Container>

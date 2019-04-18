@@ -16,15 +16,16 @@ import {
 import moment from 'moment';
 import Select from 'react-select';
 import Searchbox from '../../Components/Searchbox';
+import AccountDetail from '../../Features/Accounts/accountDetail';
 import history from '../../utils/history';
 import useCustomerStatement from '../../Hooks/useCustomerStatement';
 import useCustomer from '../../Hooks/useCustomer';
 
 const Status = ({ statusText }) => {
 	switch (statusText) {
-		case 'approved':
+		case 'approve':
 			return <div>อนุมัติแล้ว</div>;
-		case 'not approved':
+		case 'not approve':
 			return <div>ไม่อนุมัติรายการ</div>;
 		default:
 			return <div>รอการอนุมัติ</div>;
@@ -62,7 +63,6 @@ const UsersStatementList = ({ match }) => {
 		{ label: 'Action', key: 'type' },
 		{ label: 'คำอธิบาย', key: 'description' },
 		{ label: 'มูลค่า', key: 'value' },
-		{ label: 'สถานะ', key: 'status' },
 	];
 
 	return (
@@ -139,12 +139,15 @@ const UsersStatementList = ({ match }) => {
 							</Form>
 						</CardBody>
 					)}
+					<AccountDetail customer_id={match.params.id} />
 					<h3 style={{ marginBottom: '10px' }}>ประวัติการฝาก และถอน</h3>
 					<Row>
 						<Col>
 							<Searchbox
-								handleChange={e => setSearch(e.target.value)}
-								value={search}
+								handleChange={e =>
+									setSearch({ field: 'description', value: e.target.value })
+								}
+								value={search.value}
 								style={{ width: '90%' }}
 								placeholder="ค้นหาจากคำอธิบาย"
 							/>

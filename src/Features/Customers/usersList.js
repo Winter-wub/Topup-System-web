@@ -94,7 +94,7 @@ const UsersList = () => {
 											setToggleAsc(!toggleAsc);
 										}}
 									>
-										{head.label}{' '}
+										{head.label}
 										{order === head.key && (
 											<i
 												className={`fa fa-arrow-${toggleAsc ? 'down' : 'up'}`}
@@ -111,7 +111,9 @@ const UsersList = () => {
 									<td>{customer.gameId}</td>
 									<td>{customer.fullname}</td>
 									<td>{customer.telno}</td>
-									<td>{moment(customer.created_at).calendar()}</td>
+									<td>
+										{moment(customer.created_at).format('D/MM/YYYY hh:mm')}
+									</td>
 									<td>
 										<div className="ActionMenu">
 											<Button

@@ -10,12 +10,14 @@ const cookie = new Cookie();
 const useAuthentication = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [isLoad, setIsload] = useState(false);
 	const [, setIslogin] = useGlobal('isLogin');
-	const [, setRole] = useGlobal('role');
-	const [, setStaffId] = useGlobal('staffid');
-	const [, setStateUsername] = useGlobal('username');
+	const [role, setRole] = useGlobal('role');
+	const [staffid, setStaffId] = useGlobal('staffid');
+	const [username_state, setStateUsername] = useGlobal('username');
 
 	const Login = () => {
+		setIsload(true);
 		axios
 			.post(`${config.api_uri}/api/v1/users/login`, {
 				data: {
@@ -24,6 +26,7 @@ const useAuthentication = () => {
 				},
 			})
 			.then(({ data: Response }) => {
+				setIsload(false);
 				const { data } = Response;
 				if (data.status === true) {
 					cookie.set('token', data.token);
@@ -34,7 +37,7 @@ const useAuthentication = () => {
 					setStaffId(data.staffid);
 					setStateUsername(data.username);
 					swal.fire('Login', 'Login In สำเร็จ', 'success').then(() => {
-						history.push('/');
+						history.push('/dashboard');
 					});
 				} else {
 					swal.fire('Login', 'Username หรือ  Password ผิด', 'warning');
@@ -64,6 +67,10 @@ const useAuthentication = () => {
 		username,
 		password,
 		logout,
+		isLoad,
+		role,
+		username_state,
+		staffid,
 	};
 };
 

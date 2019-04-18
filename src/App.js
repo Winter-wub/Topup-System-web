@@ -10,13 +10,14 @@ import {
 import { Router, Route, NavLink } from 'react-router-dom';
 import Cookie from 'universal-cookie';
 
+import AccountManager from './Features/Accounts/accountList';
 import Authentication from './Features/Authentication/authentication';
 import Dashboard from './Features/Dashboard/dashboard';
 import Users from './Features/Customers/usersList';
 import UserEdit from './Features/Customers/userEdit';
 import UsersStatementList from './Features/Customers/userStatement';
 import UserCreate from './Features/Customers/userCreate';
-import AccountManager from './Features/Accounts/account';
+import AccountCreate from './Features/Accounts/accountCreate';
 import history from './utils/history';
 
 import useAuthentication from './Hooks/useAuthentication';
@@ -26,8 +27,9 @@ const Home = () => {
 };
 
 const NavbarItem = [
+	{ link: '/dashboard', icon: 'fa fa-line-chart', label: 'Dashboard' },
 	{ link: '/customers', icon: 'fa fa-users', label: 'Customers Manager' },
-	{ link: '/dashboard', icon: 'fa fa-list-alt', label: 'Dash Board' },
+	{ link: '/accounts', icon: 'fa fa-list-alt', label: 'Statement Manager' },
 ];
 
 const App = () => {
@@ -83,7 +85,8 @@ const App = () => {
 					<Route path="/create/customer" component={UserCreate} />
 					<Route path="/customer/:id" component={UserEdit} />
 					<Route path="/statement/:id" component={UsersStatementList} />
-					<Route path="/account" component={AccountManager} />
+					<Route path="/account" component={AccountCreate} />
+					<Route path="/accounts" component={AccountManager} />
 				</div>
 			</Container>
 			<Route path="/login" component={Authentication} />

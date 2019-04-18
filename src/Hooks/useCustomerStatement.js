@@ -2,6 +2,7 @@ import { useEffect, useState, useGlobal } from 'reactn';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import axios from '../utils/axios';
+import history from '../utils/history';
 
 const swal = withReactContent(Swal);
 
@@ -19,10 +20,11 @@ const useCustomerStatement = () => {
 	const [value, setValue] = useState(0);
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
-	const [search, setSearch] = useState('');
+	const [search, setSearch] = useState({ value: '', field: '' });
 	const [order, setOrder] = useState('');
 	const [toggleAsc, setToggleAsc] = useState(true);
 	const [username] = useGlobal('username');
+	const [like, setLike] = useState(true);
 
 	const validate = !(
 		value > 0 &&
@@ -75,16 +77,100 @@ const useCustomerStatement = () => {
 		}
 	};
 
+	const updateStatement = async (statement_id, staffId, status) => {
+		if (status) {
+			const { value: prompt } = await swal.fire({
+				titleText: 'การยืนยันอนุมัติรายการ',
+				text: 'ใส่ Remark',
+				showCancelButton: true,
+				input: 'text',
+				inputValue: '',
+				inputPlaceholder: 'กรอกคีย์เวิร์ด หรือช่วยจำ',
+			});
+
+			if (prompt) {
+				try {
+					const { data: Response } = await axios.put('/api/v1/statements', {
+						data: {
+							staffId: staffId,
+							statement_id: statement_id,
+							remark: prompt,
+						},
+					});
+					const { data } = Response;
+					if (data.status) {
+						await swal.fire('ผลลัพธ์', 'การอนุมัติสำเร็จ', 'success');
+						history.goBack();
+					} else {
+						await swal.fire(
+							'ผลลัพธ์',
+							'รายการนี้ไม่สามารถอนุมัติได้',
+							'warning',
+						);
+					}
+				} catch (err) {
+					console.log(err);
+					swal.fire(
+						'ผลลัพธ์',
+						' เกิดข้อผิดพลาดไม่สามารถติดต่อ API ได้',
+						'error',
+					);
+				}
+			}
+		} else {
+			const { value: prompt } = await swal.fire({
+				titleText: 'การยืนยันอนุมัติรายการ',
+				text: 'ใส่ Remark',
+				showCancelButton: true,
+				input: 'text',
+				inputValue: 'key',
+				inputPlaceholder: 'กรอกคีย์เวิร์ด หรือช่วยจำ',
+			});
+
+			if (prompt) {
+				try {
+					const { data: Response } = await axios.delete('/api/v1/statements', {
+						data: {
+							staffId: staffId,
+							statement_id: statement_id,
+							remark: prompt,
+						},
+					});
+					const { data } = Response;
+					if (data.status) {
+						await swal.fire('ผลลัพธ์', 'การยกเลิกสำเร็จ', 'success');
+						history.push('/accounts');
+					} else {
+						await swal.fire(
+							'ผลลัพธ์',
+							'รายการนี้ไม่สามารถยกเลิกได้',
+							'warning',
+						);
+					}
+				} catch (err) {
+					console.log(err);
+					swal.fire(
+						'ผลลัพธ์',
+						' เกิดข้อผิดพลาดไม่สามารถติดต่อ API ได้',
+						'error',
+					);
+				}
+			}
+		}
+	};
+
 	useEffect(() => {
 		let url = `/api/v1/statements?id=${customerId}&page=${page}&limit=${limit}`;
 		setFetchState(true);
 		setUserStatement([]);
-		if (search.length > 0) {
+		if (search.value.length > 0) {
 			url += `&filter=${JSON.stringify({
-				description: search,
-			})}&options=like`;
+				[search.field]: search.value,
+			})}`;
 		}
-
+		if (like === true) {
+			url += '&options=like';
+		}
 		if (order.length > 0) {
 			const orderValue = toggleAsc ? -1 : 1;
 			url += `&orderby=${JSON.stringify({ [order]: orderValue })}`;
@@ -93,14 +179,17 @@ const useCustomerStatement = () => {
 			.get(url)
 			.then(({ data: response }) => {
 				const { total, promotion_total, statements } = response.data;
-				setCurrentTotal(total);
-				setCurrentPromotionTotal(promotion_total);
-				setCurrentAllTotal(total + promotion_total);
+				console.log(promotion_total);
+				setCurrentTotal(parseFloat(total) || 0);
+				setCurrentPromotionTotal(parseFloat(promotion_total) || 0);
+				setCurrentAllTotal(parseFloat(total + promotion_total) || 0);
 				setUserStatement(statements);
 				setFetchState(false);
 			})
-			.catch(error => {});
-	}, [customerId, page, limit, search, order, toggleAsc]);
+			.catch(error => {
+				console.log(error);
+			});
+	}, [customerId, page, limit, search, order, toggleAsc, like]);
 
 	return {
 		isFetchState,
@@ -131,6 +220,8 @@ const useCustomerStatement = () => {
 		setOrder,
 		setToggleAsc,
 		toggleAsc,
+		setLike,
+		updateStatement,
 	};
 };
 
