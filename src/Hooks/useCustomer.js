@@ -59,13 +59,15 @@ const useCustomer = id => {
 					`/api/v1/customers?id=${id}`,
 				);
 				if (response.data.status === true) {
-					await swal.fire('Result', 'ลบผู้ใช้เสร็จสมบูรณ์', 'info');
+					await swal.fire('Result', 'ลบผู้ใช้เสร็จสมบูรณ์', 'success');
 					setUsersData({
 						fullname: '',
 						gameId: '',
 						bank_info: { bank: '', bank_account_name: '', bank_account_id: '' },
 					});
 					history.go('/customers');
+				} else {
+					await swal.fire('Result', 'ลบข้อมูลล้มเหลว', 'error');
 				}
 			} catch (error) {
 				console.log(error);

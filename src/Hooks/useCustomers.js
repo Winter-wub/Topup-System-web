@@ -27,6 +27,12 @@ const useCustomers = (limit = 10) => {
 				if (response.data.status === true) {
 					await swal.fire('Result', 'ลบผู้ใช้เสร็จสมบูรณ์', 'success');
 					history.go('/customers');
+				} else {
+					await swal.fire(
+						'Result',
+						'ผลข้อมูลล้มเหลวกรุณาลองใหม่อีกครั้ง',
+						'error',
+					);
 				}
 			} catch (error) {
 				console.log(error);

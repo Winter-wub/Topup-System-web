@@ -98,13 +98,13 @@ const App = () => {
 					<Route path="/dashboard" component={Dashboard} />
 					<Route path="/customers" component={Users} />
 					<Route path="/create/customer" component={UserCreate} />
+					<Route path="/create/user" component={Admin_UserCreate} />
 					<Route path="/customer/:id" component={UserEdit} />
 					<Route path="/statement/:id" component={UsersStatementList} />
 					<Route path="/account" component={AccountCreate} />
 					<Route path="/accounts" component={AccountManager} />
 					<Route path="/users" component={Admin_Usermanager} />
 					<Route path="/user/:id" component={Admin_UserEdit} />
-					<Route path="/create/user" component={Admin_UserCreate} />
 				</div>
 			</Container>
 			<Route path="/login" component={Authentication} />

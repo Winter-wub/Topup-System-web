@@ -55,12 +55,18 @@ const useUser = id => {
 			try {
 				const { data: response } = await axios.delete(`/api/v1/users?id=${id}`);
 				if (response.data.status === true) {
-					await swal.fire('Result', 'ลบผู้ใช้เสร็จสมบูรณ์', 'info');
+					await swal.fire('Result', 'ลบผู้ใช้เสร็จสมบูรณ์', 'success');
 					setUsersData({
 						fullname: '',
 						gameId: '',
 					});
-					history.go('/users');
+					history.goBack();
+				} else {
+					await swal.fire(
+						'Result',
+						'ลบผู้ใช้ล้มเหลวกรุณาลองใหม่อีกครั้ง',
+						'warning',
+					);
 				}
 			} catch (error) {
 				console.log(error);
