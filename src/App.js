@@ -77,15 +77,15 @@ const App = () => {
 						))}
 						{roleState === '99' && (
 							<NavItem>
-								<NavLink className="nav-link" to="users">
-									<i className="fa fa-user-secret" /> Admin Panel
+								<NavLink className="nav-link" to="accounts">
+									<i className="fa fa-list-alt" /> Statement Manager
 								</NavLink>
 							</NavItem>
 						)}
 						{roleState === '99' && (
 							<NavItem>
-								<NavLink className="nav-link" to="accounts">
-									<i className="fa fa-list-alt" /> Statement Manager
+								<NavLink className="nav-link" to="users">
+									<i className="fa fa-user-secret" /> Admin Panel
 								</NavLink>
 							</NavItem>
 						)}

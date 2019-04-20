@@ -78,10 +78,20 @@ const UserEdit = ({ match }) => {
 											<Input
 												style={{ width: '60%' }}
 												value={userData.username}
+												disabled
+											/>
+										</Col>
+									</FormGroup>
+									<FormGroup row>
+										<Label sm={2}>Password</Label>
+										<Col sm={10}>
+											<Input
+												style={{ width: '60%' }}
+												placeholder="Change Password"
 												onChange={e =>
 													setUsersData({
 														...userData,
-														username: e.target.value,
+														password: e.target.value,
 													})
 												}
 											/>
@@ -100,6 +110,7 @@ const UserEdit = ({ match }) => {
 													})
 												}
 											/>
+											* 99 = Admin ; 1 = Staff
 										</Col>
 									</FormGroup>
 								</Form>

@@ -23,7 +23,6 @@ const useUser = id => {
 			let update = {
 				...userData,
 			};
-			delete update._id;
 			try {
 				const { data: response } = await axios.put('/api/v1/users', {
 					data: {
