@@ -12,8 +12,15 @@ import {
 	Form,
 	Progress,
 } from 'reactstrap';
+import Select from 'react-select';
+import banks from '../../assets/bank.json';
 import history from '../../utils/history';
 import useCustomer from '../../Hooks/useCustomer';
+
+const banksOptions = banks.map(bank => ({
+	label: bank.official_name,
+	value: bank.official_name,
+}));
 
 const UserEdit = ({ match }) => {
 	const {
@@ -119,19 +126,24 @@ const UserEdit = ({ match }) => {
 									<FormGroup row>
 										<Label sm={2}>ธนาคาร</Label>
 										<Col sm={10}>
-											<Input
-												style={{ width: '60%' }}
-												value={userData.bank_info.bank}
-												onChange={e =>
-													setUsersData({
-														...userData,
-														bank_info: {
-															...userData.bank_info,
-															bank: e.target.value,
-														},
-													})
-												}
-											/>
+											<div style={{ width: '60%' }}>
+												<Select
+													options={banksOptions}
+													value={{
+														label: userData.bank_info.bank,
+														value: userData.bank_info.bank,
+													}}
+													onChange={e =>
+														setUsersData({
+															...userData,
+															bank_info: {
+																...userData.bank_info,
+																bank: e.value,
+															},
+														})
+													}
+												/>
+											</div>
 										</Col>
 									</FormGroup>
 									<FormGroup row>

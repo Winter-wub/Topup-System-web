@@ -14,8 +14,10 @@ import {
 	Input,
 	Col,
 } from 'reactstrap';
+import Select from 'react-select';
 import history from '../../utils/history';
 import axios from '../../utils/axios';
+import banks from '../../assets/bank.json';
 const swal = withReactContent(Swal);
 
 const userInfoFormat = () => ({
@@ -28,6 +30,11 @@ const userInfoFormat = () => ({
 	bank_account_id: '',
 	remark: '',
 });
+
+const banksOptions = banks.map(bank => ({
+	label: bank.official_name,
+	value: bank.official_name,
+}));
 
 const UserCreate = () => {
 	const [userInfo, setUserInfo] = useState(userInfoFormat);
@@ -200,12 +207,21 @@ const UserCreate = () => {
 					<FormGroup row>
 						<Label sm={2}>ธนาคาร</Label>
 						<Col sm={10}>
-							<Input
-								style={{ width: '60%' }}
-								type="text"
-								value={userInfo.bank_name}
-								onChange={e => validater(e, 'bank_name')}
-							/>
+							<div style={{ width: '60%' }}>
+								<Select
+									options={banksOptions}
+									onChange={e =>
+										validater(
+											{
+												target: {
+													value: e.value,
+												},
+											},
+											'bank_name',
+										)
+									}
+								/>
+							</div>
 						</Col>
 					</FormGroup>
 					<FormGroup row>

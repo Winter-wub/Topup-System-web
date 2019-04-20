@@ -92,7 +92,6 @@ const Dashboard = () => {
 					'ถอนโปรโมชั่น',
 					'ได้รับโบนัสโปรโมชั่น',
 				]);
-				console.log(report);
 				setReportActivity(report);
 			});
 

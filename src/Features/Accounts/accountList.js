@@ -15,7 +15,6 @@ import useCustomerStatement from '../../Hooks/useCustomerStatement';
 import history from '../../utils/history';
 
 const Status = ({ statusText }) => {
-	console.log(statusText);
 	switch (statusText) {
 		case 'approve':
 			return <div>อนุมัติแล้ว</div>;
@@ -48,7 +47,6 @@ const UsersList = () => {
 	];
 
 	useEffect(() => {
-		console.log(role);
 		if (role !== '99') {
 			history.goBack();
 		}

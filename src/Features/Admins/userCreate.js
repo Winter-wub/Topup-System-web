@@ -31,8 +31,6 @@ const UserCreate = () => {
 		role: false,
 	});
 
-	console.log(validate);
-
 	const checkGameIdExists = async username => {
 		const { data: Respone } = await axios.get(
 			`/api/v1/users?filter=${JSON.stringify({ username: username })}`,
@@ -50,12 +48,9 @@ const UserCreate = () => {
 		setUserInfo({ ...userInfo, [key]: value.toString() });
 		if (key === 'username') {
 			if (value.length > 6) {
-				console.log(await checkGameIdExists(value));
 				if (await checkGameIdExists(value)) {
-					console.log('no');
 					setValidate({ ...validate, username: false });
 				} else {
-					console.log('yes');
 					setValidate({ ...validate, username: true });
 				}
 			} else {
@@ -68,7 +63,6 @@ const UserCreate = () => {
 				setValidate({ ...validate, password: true });
 			}
 		} else if (key === 'role') {
-			console.log(value === '99');
 			if (value === '99') {
 				setValidate({ ...validate, role: true });
 			} else {
@@ -98,7 +92,6 @@ const UserCreate = () => {
 			await swal.fire('Result', text, 'info');
 			history.push('/users');
 		} catch (err) {
-			console.log(err);
 			await swal.fire(
 				'Result',
 				'ไม่สามารถติดต่อกับ API ได้ กรุณาลองใหม่อีกครั้ง',
