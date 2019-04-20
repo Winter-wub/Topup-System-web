@@ -20,6 +20,7 @@ const swal = withReactContent(Swal);
 const userInfoFormat = () => ({
 	fullname: '',
 	password: '',
+	role: '',
 });
 
 const UserCreate = () => {
@@ -27,6 +28,7 @@ const UserCreate = () => {
 	const [validate, setValidate] = useState({
 		username: false,
 		password: false,
+		role: false,
 	});
 
 	console.log(validate);
@@ -64,6 +66,17 @@ const UserCreate = () => {
 				setValidate({ ...validate, password: false });
 			} else {
 				setValidate({ ...validate, password: true });
+			}
+		} else if (key === 'role') {
+			console.log(value === '99');
+			if (value === '99') {
+				setValidate({ ...validate, role: true });
+			} else {
+				if (value === '1') {
+					setValidate({ ...validate, role: true });
+				} else {
+					setValidate({ ...validate, role: false });
+				}
 			}
 		}
 	};
@@ -145,6 +158,20 @@ const UserCreate = () => {
 								min={8}
 								maxLength={32}
 							/>
+						</Col>
+					</FormGroup>
+					<FormGroup row>
+						<Label sm={2}>Role</Label>
+						<Col sm={10}>
+							<Input
+								style={{ width: '60%' }}
+								type="number"
+								value={userInfo.role}
+								onChange={e => {
+									validater(e, 'role');
+								}}
+							/>
+							* 99 = Admin ; 1 = Staff
 						</Col>
 					</FormGroup>
 				</Form>
