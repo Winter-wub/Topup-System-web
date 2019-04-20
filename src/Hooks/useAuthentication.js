@@ -52,10 +52,10 @@ const useAuthentication = () => {
 			});
 	};
 
-	const logout = () => {
-		cookie.remove('token');
-		cookie.remove('username');
-		cookie.remove('role');
+	const logout = async () => {
+		await cookie.remove('token');
+		await cookie.remove('username');
+		await cookie.remove('role');
 		setIslogin(false);
 		setStaffId('');
 		setStateUsername('');
