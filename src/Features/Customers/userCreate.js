@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import _ from 'lodash';
 import {
 	Card,
 	CardHeader,
@@ -32,7 +31,7 @@ const userInfoFormat = () => ({
 });
 
 const banksOptions = banks.map(bank => ({
-	label: bank.official_name,
+	label: bank.thainame,
 	value: bank.official_name,
 }));
 
@@ -55,13 +54,12 @@ const UserCreate = () => {
 			return false;
 		}
 	};
-	const checkGameIdExistsDebound = _.debounce(checkGameIdExists, 900);
 
 	const validater = async (event, key = '') => {
 		const value = event.target.value;
 		setUserInfo({ ...userInfo, [key]: value.toString() });
 		if (key === 'gameId') {
-			if (value.length !== 8 || checkGameIdExistsDebound(value)) {
+			if (checkGameIdExists(value)) {
 				setValidate({ ...validate, gameId: false });
 			} else {
 				setValidate({ ...validate, gameId: true });
@@ -135,12 +133,10 @@ const UserCreate = () => {
 								onChange={e => {
 									if (e.target.value.length <= 8) validater(e, 'gameId');
 								}}
-								min={8}
-								maxLength={8}
 							/>
 							{!validate.gameId && (
 								<div className="text-danger">
-									App ID ต้องมีตัวเลขเท่ากับ 8 ตัว หรือมีคนใช้แล้ว
+									App ID ใช้แล้ว
 								</div>
 							)}
 						</Col>
@@ -194,7 +190,7 @@ const UserCreate = () => {
 						<Label sm={2}>Remark</Label>
 						<Col sm={10}>
 							<Input
-								type="email"
+								type="text"
 								style={{ width: '60%' }}
 								value={userInfo.remark}
 								onChange={e => validater(e, 'remark')}
@@ -241,7 +237,7 @@ const UserCreate = () => {
 							<Input
 								type="text"
 								style={{ width: '60%' }}
-								value={userInfo.bank_account_id}
+								value={userInfo.bank_account_id}	
 								onChange={e => validater(e, 'bank_account_id')}
 							/>
 						</Col>
@@ -255,7 +251,7 @@ const UserCreate = () => {
 					color="primary"
 					onClick={async () => await createCustomer()}
 				>
-					Add User
+				<i className="fa fa-plus" />  Add User
 				</Button>
 			</CardFooter>
 		</Card>

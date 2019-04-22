@@ -18,7 +18,7 @@ import history from '../../utils/history';
 import useCustomer from '../../Hooks/useCustomer';
 
 const banksOptions = banks.map(bank => ({
-	label: bank.official_name,
+	label: bank.thainame,
 	value: bank.official_name,
 }));
 
@@ -30,6 +30,18 @@ const UserEdit = ({ match }) => {
 		updateUserData,
 		deleteUser,
 	} = useCustomer(match.params.id);
+
+
+	const currentIndexBank = banksOptions.findIndex(bank => (
+		 bank.value === userData.bank_info.bank
+	));
+	let currentBankOptions = {
+		value: '',
+		label: '',
+	}
+	if(currentIndexBank >= 0 ) {
+		currentBankOptions = banksOptions[currentIndexBank]
+	}
 
 	return (
 		<div>
@@ -129,10 +141,7 @@ const UserEdit = ({ match }) => {
 											<div style={{ width: '60%' }}>
 												<Select
 													options={banksOptions}
-													value={{
-														label: userData.bank_info.bank,
-														value: userData.bank_info.bank,
-													}}
+													value={currentBankOptions}
 													onChange={e =>
 														setUsersData({
 															...userData,
