@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	Card,
 	CardBody,
@@ -29,7 +29,6 @@ const Account = () => {
 		setCustomerId,
 		currentTotal,
 		currentPromotionTotal,
-		currentAllTotal,
 		setDescription,
 		setValue,
 		validate,
@@ -39,9 +38,15 @@ const Account = () => {
 		description,
 		value,
 	} = useCustomerStatement();
+	const [toggleSelectUserMode, setToggleSelectUserMde] = useState(true);
 	const userOptions = customerList.map(customer => ({
 		value: customer._id,
 		label: customer.fullname,
+	}));
+
+	const userOptions2 = customerList.map(customer => ({
+		value: customer._id,
+		label: customer.gameId,
 	}));
 
 	const typeActionOptions = [
@@ -60,15 +65,22 @@ const Account = () => {
 			</CardHeader>
 			<CardBody>
 				<Form>
-					<FormGroup row>
+				<FormGroup row>
 						<Label sm={2}>เลือกบัญชีผู้ใช้</Label>
+						<Col sm={10}>
+							<Button color={toggleSelectUserMode ? 'primary': 'warning'} onClick={() => setToggleSelectUserMde(!toggleSelectUserMode)}>App Id / Full Name</Button>
+						</Col>
+					</FormGroup>
+					{ toggleSelectUserMode &&
+					<FormGroup row>
+						<Label sm={2}>Full Name</Label>
 						<Col sm={10}>
 							<Select
 								options={userOptions}
 								isSearchable
 								isClearable
 								isLoading={CustomerListLoad}
-								placeholder="เลือกบัญชีผู้ใช้ หรือพิมพ์ค้นหา"
+								placeholder="เลือกบัญชีผู้ใช้ หรือพิมพ์ค้นหา ชื่อ"
 								style={{ width: '60%' }}
 								onChange={e => {
 									e && setCustomerId(e.value);
@@ -76,7 +88,26 @@ const Account = () => {
 							/>
 						</Col>
 					</FormGroup>
-					{!isFetchState && (
+					}{ !toggleSelectUserMode &&
+					<FormGroup row>
+						<Label sm={2}>App Id</Label>
+					<Col sm={10}>
+							<Select
+								options={userOptions2}
+								isSearchable
+								isClearable
+								isLoading={CustomerListLoad}
+								placeholder="เลือกบัญชีผู้ใช้ หรือพิมพ์ค้นหา App Id"
+								style={{ width: '60%' }}
+								onChange={e => {
+									e && setCustomerId(e.value);
+								}}
+							/>
+						</Col>
+					</FormGroup>
+					}
+
+					{!isFetchState && !isNaN(currentTotal) && !isNaN(currentPromotionTotal)&& (
 						<FormGroup row>
 							<Label sm={2}>สถานะการเงินของ Account ที่เลือก</Label>
 							<Col sm={10}>
@@ -90,7 +121,7 @@ const Account = () => {
 									</InputGroupAddon>
 									<Input value={`${currentPromotionTotal} ฿`} disabled />
 									<InputGroupAddon addonType="append">ยอดสุทธิ</InputGroupAddon>
-									<Input value={`${currentAllTotal} ฿`} disabled />
+									<Input value={`${parseFloat(currentPromotionTotal + currentTotal)} ฿`} disabled />
 								</InputGroup>
 							</Col>
 						</FormGroup>

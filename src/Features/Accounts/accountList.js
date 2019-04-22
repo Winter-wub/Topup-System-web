@@ -17,9 +17,9 @@ import history from '../../utils/history';
 const Status = ({ statusText }) => {
 	switch (statusText) {
 		case 'approve':
-			return <div>อนุมัติแล้ว</div>;
+			return <div><i className="fa fa-check text-success" /> อนุมัติแล้ว</div>;
 		case 'not approve':
-			return <div>ไม่อนุมัติรายการ</div>;
+			return <div><i className="fa fa-times text-danger" /> ไม่อนุมัติรายการ</div>;
 		default:
 			return <div>รอการอนุมัติ</div>;
 	}
@@ -38,8 +38,9 @@ const UsersList = () => {
 		setPage,
 		page,
 	} = useCustomerStatement();
+
 	const header = [
-		{ key: 'gameId', label: 'App id' },
+		{ key: 'customer_id', label: 'App id' },
 		{ key: 'created_at', label: 'สร้างเมื่อ' },
 		{ key: 'type', label: 'การทำรายการ' },
 		{ key: 'staffId', label: 'ดำเนินการโดย' },
@@ -95,7 +96,7 @@ const UsersList = () => {
 						<tbody>
 							{userStatement.map(state => (
 								<tr key={state._id}>
-									<td>{state.customer_id}</td>
+									<td>{state.CustomerData ? state.CustomerData.gameId : 'N/A'}</td>
 									<td>{moment(state.created_at).format('DD/MM/YYYY hh:mm')}</td>
 									<td>{state.type}</td>
 									<td>{state.staffId}</td>

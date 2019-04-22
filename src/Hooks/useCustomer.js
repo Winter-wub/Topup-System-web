@@ -25,6 +25,12 @@ const useCustomer = id => {
 				...userData,
 			};
 			delete update._id;
+			delete update.withdrawpromo_total
+			delete update.withdraw_total
+			delete update.promotion_total
+			delete update.total
+			delete  update.depositpromo_total
+			delete update.deposit_total
 			try {
 				const { data: response } = await axios.put('/api/v1/customers', {
 					data: {

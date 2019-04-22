@@ -17,10 +17,48 @@ import banks from '../../assets/bank.json';
 import history from '../../utils/history';
 import useCustomer from '../../Hooks/useCustomer';
 
+const ReferenceOption = [ 
+	{ label: 'จากเพื่อน', value: 'friend' }, 
+	{ label: 'Facebook Group', value: 'fb_group' },
+	{ label: 'Google,Yahoo,Bing', value: 'search_engine' }, 
+	{ label: 'อื่นๆ', value: 'other' } ];
+
 const banksOptions = banks.map(bank => ({
 	label: bank.thainame,
 	value: bank.official_name,
 }));
+
+const Referentmenu = ( { optionName, value } ) => {
+	switch(optionName) {
+		case 'fb_group':
+			return <FormGroup row>
+			<Label sm={2}>จากกลุ่ม</Label>
+			<Col sm={10}>
+			<Input
+					style={{ width: '60%' }}
+					type="text"
+					value={value}
+					disabled
+			/>
+			</Col>
+		</FormGroup>
+		case 'other':
+			return <FormGroup row>
+			<Label sm={2}>รายละเอียด</Label>
+			<Col sm={10}>
+			<Input
+					style={{ width: '60%' }}
+					type="text"
+					value={value}
+					disabled
+			/>
+			</Col>
+		</FormGroup>
+	 default: return ''
+	}
+
+
+}
 
 const UserEdit = ({ match }) => {
 	const {
@@ -41,6 +79,14 @@ const UserEdit = ({ match }) => {
 	}
 	if(currentIndexBank >= 0 ) {
 		currentBankOptions = banksOptions[currentIndexBank]
+	}
+
+	const currentReferentTypeIndex = userData.referent && ReferenceOption.findIndex(ref => (
+		 ref.value === userData.referent.type
+	))
+	let currentReferentType = '';
+	if(currentReferentTypeIndex >= 0 ) {
+		currentReferentType = ReferenceOption[currentReferentTypeIndex].label;
 	}
 
 	return (
@@ -66,15 +112,13 @@ const UserEdit = ({ match }) => {
 								<h3 style={{ marginBottom: '10px' }}>ข้อมูลส่วนตัว</h3>
 								<Form>
 									<FormGroup row>
-										<Label sm={2}>ID</Label>
+										<Label sm={2}>App Id</Label>
 										<Col sm={10}>
 											<Input
 												style={{ width: '60%' }}
 												type="text"
 												value={userData.gameId}
-												onChange={e =>
-													setUsersData({ ...userData, gameId: e.target.value })
-												}
+												disabled
 											/>
 										</Col>
 									</FormGroup>
@@ -120,15 +164,25 @@ const UserEdit = ({ match }) => {
 										</Col>
 									</FormGroup>
 									<FormGroup row>
+										<Label sm={2}>Referent type</Label>
+										<Col sm={10}>
+										<Input
+												style={{ width: '60%' }}
+												type="text"
+												value={currentReferentType}
+												disabled
+											/>
+										</Col>
+									</FormGroup>
+									<Referentmenu optionName={userData.referent.type} value={userData.referent.value}/>
+									<FormGroup row>
 										<Label sm={2}>Remark</Label>
 										<Col sm={10}>
 											<Input
 												style={{ width: '60%' }}
 												type="text"
 												value={userData.remark}
-												onChange={e =>
-													setUsersData({ ...userData, remark: e.target.value })
-												}
+												disabled
 											/>
 										</Col>
 									</FormGroup>

@@ -102,6 +102,10 @@ const UsersList = () => {
 										)}
 									</th>
 								))}
+								<th>Withdraw</th>
+								<th>Promo</th>
+								<th>Deposit</th>
+								<th>Total</th>
 								<th>Action</th>
 							</tr>
 						</thead>
@@ -109,11 +113,15 @@ const UsersList = () => {
 							{customerList.map(customer => (
 								<tr key={customer.gameId}>
 									<td>{customer.gameId}</td>
-									<td>{customer.fullname}</td>
+									<td>{customer.fullname.length > 13 ? `${customer.fullname.substring(0,6)}...` : customer.fullname}</td>
 									<td>{customer.telno}</td>
 									<td>
 										{moment(customer.created_at).format('D/MM/YYYY hh:mm')}
 									</td>
+									<td>{customer.withdraw_total}</td>
+									<td>{customer.withdrawpromo_total}</td>
+									<td>{customer.deposit_total}</td>
+									<td>{customer.total}</td>
 									<td>
 										<div className="ActionMenu">
 											<Button

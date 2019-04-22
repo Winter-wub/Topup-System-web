@@ -182,9 +182,9 @@ const useCustomerStatement = () => {
 			.get(url)
 			.then(({ data: response }) => {
 				const { total, promotion_total, statements } = response.data;
-				setCurrentTotal(parseFloat(total));
-				setCurrentPromotionTotal(parseFloat(promotion_total));
-				setCurrentAllTotal(parseFloat(total + promotion_total));
+				setCurrentTotal(total);
+				setCurrentPromotionTotal(promotion_total);
+				setCurrentAllTotal(parseFloat(currentTotal)+ parseFloat(currentPromotionTotal));
 				setUserStatement(statements);
 			})
 			.catch(error => {

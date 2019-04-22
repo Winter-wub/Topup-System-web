@@ -24,13 +24,14 @@ import useCustomer from '../../Hooks/useCustomer';
 const Status = ({ statusText }) => {
 	switch (statusText) {
 		case 'approve':
-			return <div>อนุมัติแล้ว</div>;
+			return <div><i className="fa fa-check text-success" /> อนุมัติแล้ว</div>;
 		case 'not approve':
-			return <div>ไม่อนุมัติรายการ</div>;
+			return <div><i className="fa fa-times text-danger" /> ไม่อนุมัติรายการ</div>;
 		default:
 			return <div>รอการอนุมัติ</div>;
 	}
 };
+
 
 const UsersStatementList = ({ match }) => {
 	const {
@@ -139,7 +140,7 @@ const UsersStatementList = ({ match }) => {
 							</Form>
 						</CardBody>
 					)}
-					<AccountDetail customer_id={match.params.id} />
+					{ userStatement.length > 0 && <AccountDetail customer_id={match.params.id} />}
 					<h3 style={{ marginBottom: '10px' }}>ประวัติการฝาก และถอน</h3>
 					<Row>
 						<Col>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {
@@ -14,9 +14,11 @@ import {
 	Col,
 } from 'reactstrap';
 import Select from 'react-select';
-import history from '../../utils/history';
+import Creatable from 'react-select/lib/Creatable';
 import axios from '../../utils/axios';
+import history from '../../utils/history';
 import banks from '../../assets/bank.json';
+
 const swal = withReactContent(Swal);
 
 const userInfoFormat = () => ({
@@ -28,6 +30,10 @@ const userInfoFormat = () => ({
 	bank_account_name: '',
 	bank_account_id: '',
 	remark: '',
+	referent: {
+		type: '',
+		value: '',
+	}
 });
 
 const banksOptions = banks.map(bank => ({
@@ -35,13 +41,58 @@ const banksOptions = banks.map(bank => ({
 	value: bank.official_name,
 }));
 
+const ReferenceOption = [ { label: 'จากเพื่อน', value: 'friend' }, { label: 'Facebook Group', value: 'fb_group' },{ label: 'Google,Yahoo,Bing', value: 'search_engine' }, { label: 'อื่นๆ', value: 'other' } ]
+
+const Referentmenu = ( { optionName,onChange, value, fbGroupOptions } ) => {
+	switch(optionName) {
+		case 'fb_group':
+			return <FormGroup row>
+			<Label sm={2}>รู้จักจาก (เพิ่มเติม)</Label>
+			<Col sm={10}>
+			<div style={{ width: '60%' }}>
+					<Creatable
+						value={value}
+						onChange={e => onChange(e.value)}
+						options={fbGroupOptions}
+					/>
+				</div>
+			</Col>
+		</FormGroup>
+		case 'other':
+			return <FormGroup row>
+			<Label sm={2}>ระบุ</Label>
+			<Col sm={10}>
+			<Input
+					style={{ width: '60%' }}
+					type="text"
+					value={value}
+					onChange={onChange}
+			/>
+			</Col>
+		</FormGroup>
+	 default: return ''
+	}
+
+
+}
+
 const UserCreate = () => {
 	const [userInfo, setUserInfo] = useState(userInfoFormat);
+	const [referrentSelect, setReferentSelect] = useState({});
 	const [validate, setValidate] = useState({
 		fullname: false,
 		gameId: false,
 		telno: false,
 	});
+	const [fbGroupOptions, setfbGroupOptions ] = useState([]);
+
+	useEffect(() => {
+		axios.get('/api/v1/customers?limit=0').then(({ data: response }) => {
+			const options = response.data.customers.filter(customer => (customer.referent && customer.referent.type === 'fb_group')).map( customer => ({ label: customer.referent.value, value: customer.referent.value }) )
+			setfbGroupOptions(options)
+		})
+		
+	}, [])
 
 	const checkGameIdExists = async gameId => {
 		const { data: Respone } = await axios.get(
@@ -59,7 +110,7 @@ const UserCreate = () => {
 		const value = event.target.value;
 		setUserInfo({ ...userInfo, [key]: value.toString() });
 		if (key === 'gameId') {
-			if (checkGameIdExists(value)) {
+			if (await checkGameIdExists(value)) {
 				setValidate({ ...validate, gameId: false });
 			} else {
 				setValidate({ ...validate, gameId: true });
@@ -90,6 +141,7 @@ const UserCreate = () => {
 				bank_account_name: userInfo.bank_account_name,
 				bank_account_id: userInfo.bank_account_id,
 				remark: userInfo.remark,
+				referent: userInfo.referent
 			};
 			const { data: response } = await axios.post('/api/v1/customers', {
 				data: postData,
@@ -130,9 +182,9 @@ const UserCreate = () => {
 								style={{ width: '60%' }}
 								type="number"
 								value={userInfo.gameId}
-								onChange={e => {
-									if (e.target.value.length <= 8) validater(e, 'gameId');
-								}}
+								onChange={e => (
+									validater(e, 'gameId')
+								)}
 							/>
 							{!validate.gameId && (
 								<div className="text-danger">
@@ -186,6 +238,24 @@ const UserCreate = () => {
 							/>
 						</Col>
 					</FormGroup>
+					<FormGroup row>
+						<Label sm={2}>รู้จักจาก</Label>
+						<Col sm={10}>
+						<div style={{ width: '60%' }}>
+								<Select
+									options={ReferenceOption}
+									onChange={e => {
+										setReferentSelect(e.value)
+										setUserInfo({ ...userInfo,referent: { ...userInfo.referent,type: e.value }  })								
+									}}
+								/>
+							</div>
+						</Col>
+					</FormGroup>
+					<Referentmenu optionName={referrentSelect} value={{label: userInfo.referent.value, value: userInfo.referent.value}} onChange={e=> 
+										setUserInfo({ ...userInfo,referent: { ...userInfo.referent, value: e }  })}	fbGroupOptions={fbGroupOptions}							
+					/>
+
 					<FormGroup row>
 						<Label sm={2}>Remark</Label>
 						<Col sm={10}>
