@@ -17,48 +17,52 @@ import banks from '../../assets/bank.json';
 import history from '../../utils/history';
 import useCustomer from '../../Hooks/useCustomer';
 
-const ReferenceOption = [ 
-	{ label: 'จากเพื่อน', value: 'friend' }, 
+const ReferenceOption = [
+	{ label: 'จากเพื่อน', value: 'friend' },
 	{ label: 'Facebook Group', value: 'fb_group' },
-	{ label: 'Google,Yahoo,Bing', value: 'search_engine' }, 
-	{ label: 'อื่นๆ', value: 'other' } ];
+	{ label: 'Google,Yahoo,Bing', value: 'search_engine' },
+	{ label: 'อื่นๆ', value: 'other' },
+];
 
 const banksOptions = banks.map(bank => ({
 	label: bank.thainame,
 	value: bank.official_name,
 }));
 
-const Referentmenu = ( { optionName, value } ) => {
-	switch(optionName) {
+const Referencemenu = ({ optionName, value }) => {
+	switch (optionName) {
 		case 'fb_group':
-			return <FormGroup row>
-			<Label sm={2}>จากกลุ่ม</Label>
-			<Col sm={10}>
-			<Input
-					style={{ width: '60%' }}
-					type="text"
-					value={value}
-					disabled
-			/>
-			</Col>
-		</FormGroup>
+			return (
+				<FormGroup row>
+					<Label sm={2}>จากกลุ่ม</Label>
+					<Col sm={10}>
+						<Input
+							style={{ width: '60%' }}
+							type="text"
+							value={value}
+							disabled
+						/>
+					</Col>
+				</FormGroup>
+			);
 		case 'other':
-			return <FormGroup row>
-			<Label sm={2}>รายละเอียด</Label>
-			<Col sm={10}>
-			<Input
-					style={{ width: '60%' }}
-					type="text"
-					value={value}
-					disabled
-			/>
-			</Col>
-		</FormGroup>
-	 default: return ''
+			return (
+				<FormGroup row>
+					<Label sm={2}>รายละเอียด</Label>
+					<Col sm={10}>
+						<Input
+							style={{ width: '60%' }}
+							type="text"
+							value={value}
+							disabled
+						/>
+					</Col>
+				</FormGroup>
+			);
+		default:
+			return '';
 	}
-
-
-}
+};
 
 const UserEdit = ({ match }) => {
 	const {
@@ -69,24 +73,23 @@ const UserEdit = ({ match }) => {
 		deleteUser,
 	} = useCustomer(match.params.id);
 
-
-	const currentIndexBank = banksOptions.findIndex(bank => (
-		 bank.value === userData.bank_info.bank
-	));
+	const currentIndexBank = banksOptions.findIndex(
+		bank => bank.value === userData.bank_info.bank,
+	);
 	let currentBankOptions = {
 		value: '',
 		label: '',
-	}
-	if(currentIndexBank >= 0 ) {
-		currentBankOptions = banksOptions[currentIndexBank]
+	};
+	if (currentIndexBank >= 0) {
+		currentBankOptions = banksOptions[currentIndexBank];
 	}
 
-	const currentReferentTypeIndex = userData.referent && ReferenceOption.findIndex(ref => (
-		 ref.value === userData.referent.type
-	))
+	const currentReferenceTypeIndex =
+		userData.reference &&
+		ReferenceOption.findIndex(ref => ref.value === userData.reference.type);
 	let currentReferentType = '';
-	if(currentReferentTypeIndex >= 0 ) {
-		currentReferentType = ReferenceOption[currentReferentTypeIndex].label;
+	if (currentReferenceTypeIndex >= 0) {
+		currentReferentType = ReferenceOption[currentReferenceTypeIndex].label;
 	}
 
 	return (
@@ -101,8 +104,7 @@ const UserEdit = ({ match }) => {
 						<CardHeader>
 							<Button
 								style={{ marginRight: '20px' }}
-								onClick={() => history.goBack()}
-							>
+								onClick={() => history.goBack()}>
 								<i className="fa fa-arrow-left" />
 							</Button>
 							{userData.fullname}
@@ -164,9 +166,9 @@ const UserEdit = ({ match }) => {
 										</Col>
 									</FormGroup>
 									<FormGroup row>
-										<Label sm={2}>Referent type</Label>
+										<Label sm={2}>Reference type</Label>
 										<Col sm={10}>
-										<Input
+											<Input
 												style={{ width: '60%' }}
 												type="text"
 												value={currentReferentType}
@@ -174,7 +176,10 @@ const UserEdit = ({ match }) => {
 											/>
 										</Col>
 									</FormGroup>
-									<Referentmenu optionName={userData.referent.type} value={userData.referent.value}/>
+									<Referencemenu
+										optionName={userData.reference.type}
+										value={userData.reference.value}
+									/>
 									<FormGroup row>
 										<Label sm={2}>Remark</Label>
 										<Col sm={10}>
@@ -256,15 +261,13 @@ const UserEdit = ({ match }) => {
 						onClick={() => {
 							updateUserData();
 						}}
-						style={{ float: 'Left' }}
-					>
+						style={{ float: 'Left' }}>
 						<i className="fa fa-floppy-o" /> บันทึกการแก้ไขข้อมูล
 					</Button>
 					<Button
 						color="danger"
 						style={{ float: 'Right' }}
-						onClick={() => deleteUser(match.params.id)}
-					>
+						onClick={() => deleteUser(match.params.id)}>
 						<i className="fa fa-trash-o" /> ลบข้อมูลลูกค้า
 					</Button>
 				</CardFooter>

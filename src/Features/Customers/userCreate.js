@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import {
@@ -30,10 +30,10 @@ const userInfoFormat = () => ({
 	bank_account_name: '',
 	bank_account_id: '',
 	remark: '',
-	referent: {
+	reference: {
 		type: '',
 		value: '',
-	}
+	},
 });
 
 const banksOptions = banks.map(bank => ({
@@ -41,40 +41,48 @@ const banksOptions = banks.map(bank => ({
 	value: bank.official_name,
 }));
 
-const ReferenceOption = [ { label: 'จากเพื่อน', value: 'friend' }, { label: 'Facebook Group', value: 'fb_group' },{ label: 'Google,Yahoo,Bing', value: 'search_engine' }, { label: 'อื่นๆ', value: 'other' } ]
+const ReferenceOption = [
+	{ label: 'จากเพื่อน', value: 'friend' },
+	{ label: 'Facebook Group', value: 'fb_group' },
+	{ label: 'Google,Yahoo,Bing', value: 'search_engine' },
+	{ label: 'อื่นๆ', value: 'other' },
+];
 
-const Referentmenu = ( { optionName,onChange, value, fbGroupOptions } ) => {
-	switch(optionName) {
+const Referentmenu = ({ optionName, onChange, value, fbGroupOptions }) => {
+	switch (optionName) {
 		case 'fb_group':
-			return <FormGroup row>
-			<Label sm={2}>รู้จักจาก (เพิ่มเติม)</Label>
-			<Col sm={10}>
-			<div style={{ width: '60%' }}>
-					<Creatable
-						value={value}
-						onChange={e => onChange(e.value)}
-						options={fbGroupOptions}
-					/>
-				</div>
-			</Col>
-		</FormGroup>
+			return (
+				<FormGroup row>
+					<Label sm={2}>รู้จักจาก (เพิ่มเติม)</Label>
+					<Col sm={10}>
+						<div style={{ width: '60%' }}>
+							<Creatable
+								value={value}
+								onChange={e => onChange(e.value)}
+								options={fbGroupOptions}
+							/>
+						</div>
+					</Col>
+				</FormGroup>
+			);
 		case 'other':
-			return <FormGroup row>
-			<Label sm={2}>ระบุ</Label>
-			<Col sm={10}>
-			<Input
-					style={{ width: '60%' }}
-					type="text"
-					value={value}
-					onChange={onChange}
-			/>
-			</Col>
-		</FormGroup>
-	 default: return ''
+			return (
+				<FormGroup row>
+					<Label sm={2}>ระบุ</Label>
+					<Col sm={10}>
+						<Input
+							style={{ width: '60%' }}
+							type="text"
+							value={value}
+							onChange={onChange}
+						/>
+					</Col>
+				</FormGroup>
+			);
+		default:
+			return '';
 	}
-
-
-}
+};
 
 const UserCreate = () => {
 	const [userInfo, setUserInfo] = useState(userInfoFormat);
@@ -84,15 +92,22 @@ const UserCreate = () => {
 		gameId: false,
 		telno: false,
 	});
-	const [fbGroupOptions, setfbGroupOptions ] = useState([]);
+	const [fbGroupOptions, setfbGroupOptions] = useState([]);
 
 	useEffect(() => {
 		axios.get('/api/v1/customers?limit=0').then(({ data: response }) => {
-			const options = response.data.customers.filter(customer => (customer.referent && customer.referent.type === 'fb_group')).map( customer => ({ label: customer.referent.value, value: customer.referent.value }) )
-			setfbGroupOptions(options)
-		})
-		
-	}, [])
+			const options = response.data.customers
+				.filter(
+					customer =>
+						customer.reference && customer.reference.type === 'fb_group',
+				)
+				.map(customer => ({
+					label: customer.reference.value,
+					value: customer.reference.value,
+				}));
+			setfbGroupOptions(options);
+		});
+	}, []);
 
 	const checkGameIdExists = async gameId => {
 		const { data: Respone } = await axios.get(
@@ -141,7 +156,7 @@ const UserCreate = () => {
 				bank_account_name: userInfo.bank_account_name,
 				bank_account_id: userInfo.bank_account_id,
 				remark: userInfo.remark,
-				referent: userInfo.referent
+				reference: userInfo.reference,
 			};
 			const { data: response } = await axios.post('/api/v1/customers', {
 				data: postData,
@@ -182,14 +197,10 @@ const UserCreate = () => {
 								style={{ width: '60%' }}
 								type="number"
 								value={userInfo.gameId}
-								onChange={e => (
-									validater(e, 'gameId')
-								)}
+								onChange={e => validater(e, 'gameId')}
 							/>
 							{!validate.gameId && (
-								<div className="text-danger">
-									App ID ใช้แล้ว
-								</div>
+								<div className="text-danger">App ID ใช้แล้ว</div>
 							)}
 						</Col>
 					</FormGroup>
@@ -241,19 +252,33 @@ const UserCreate = () => {
 					<FormGroup row>
 						<Label sm={2}>รู้จักจาก</Label>
 						<Col sm={10}>
-						<div style={{ width: '60%' }}>
+							<div style={{ width: '60%' }}>
 								<Select
 									options={ReferenceOption}
 									onChange={e => {
-										setReferentSelect(e.value)
-										setUserInfo({ ...userInfo,referent: { ...userInfo.referent,type: e.value }  })								
+										setReferentSelect(e.value);
+										setUserInfo({
+											...userInfo,
+											reference: { ...userInfo.reference, type: e.value },
+										});
 									}}
 								/>
 							</div>
 						</Col>
 					</FormGroup>
-					<Referentmenu optionName={referrentSelect} value={{label: userInfo.referent.value, value: userInfo.referent.value}} onChange={e=> 
-										setUserInfo({ ...userInfo,referent: { ...userInfo.referent, value: e }  })}	fbGroupOptions={fbGroupOptions}							
+					<Referentmenu
+						optionName={referrentSelect}
+						value={{
+							label: userInfo.reference.value,
+							value: userInfo.reference.value,
+						}}
+						onChange={e =>
+							setUserInfo({
+								...userInfo,
+								reference: { ...userInfo.reference, value: e },
+							})
+						}
+						fbGroupOptions={fbGroupOptions}
 					/>
 
 					<FormGroup row>
@@ -307,7 +332,7 @@ const UserCreate = () => {
 							<Input
 								type="text"
 								style={{ width: '60%' }}
-								value={userInfo.bank_account_id}	
+								value={userInfo.bank_account_id}
 								onChange={e => validater(e, 'bank_account_id')}
 							/>
 						</Col>
@@ -319,9 +344,8 @@ const UserCreate = () => {
 				<Button
 					disabled={isEnabledAddNewCustomer}
 					color="primary"
-					onClick={async () => await createCustomer()}
-				>
-				<i className="fa fa-plus" />  Add User
+					onClick={async () => await createCustomer()}>
+					<i className="fa fa-plus" /> Add User
 				</Button>
 			</CardFooter>
 		</Card>

@@ -59,7 +59,7 @@ const Dashboard = () => {
 		setReportActivity([]);
 		setLoadReportStatementValue(true);
 		setReportStatementValue([]);
-		
+
 		axios
 			.get(
 				`/api/v1/statements/report?mode=${mode.value}&year=${year}&month=${
@@ -127,7 +127,6 @@ const Dashboard = () => {
 						];
 					}
 				});
-				console.log(report);
 
 				const currentDeposit = report.reduce((acc, curr) => {
 					if (typeof curr[2] === 'number') {
