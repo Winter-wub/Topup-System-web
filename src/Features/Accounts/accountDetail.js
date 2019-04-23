@@ -46,14 +46,12 @@ const AccountDetail = ({ customer_id }) => {
 								<Button
 									disabled={page <= 1}
 									onClick={() => setPage(page - 1)}
-									style={{ marginRight: '2px' }}
-								>
+									style={{ marginRight: '2px' }}>
 									<i className="fa fa-arrow-left" />
 								</Button>
 								<Button
 									onClick={() => setPage(page + 1)}
-									style={{ marginLeft: '2px' }}
-								>
+									style={{ marginLeft: '2px' }}>
 									<i className="fa fa-arrow-right" />
 								</Button>
 							</div>
@@ -69,8 +67,7 @@ const AccountDetail = ({ customer_id }) => {
 										onClick={() => {
 											setOrder(head.key);
 											setToggleAsc(!toggleAsc);
-										}}
-									>
+										}}>
 										{head.label}
 										{order === head.key && (
 											<i
@@ -110,16 +107,14 @@ const AccountDetail = ({ customer_id }) => {
 													color="success"
 													onClick={() => {
 														updateStatement(state._id, username_state, true);
-													}}
-												>
+													}}>
 													<i className="fa fa-check-circle" />
 												</Button>
 												<Button
 													color="danger"
 													onClick={() => {
 														updateStatement(state._id, username_state, false);
-													}}
-												>
+													}}>
 													<i className="fa fa-times-circle" />
 												</Button>
 											</div>

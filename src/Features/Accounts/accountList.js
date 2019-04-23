@@ -17,9 +17,17 @@ import history from '../../utils/history';
 const Status = ({ statusText }) => {
 	switch (statusText) {
 		case 'approve':
-			return <div><i className="fa fa-check text-success" /> อนุมัติแล้ว</div>;
+			return (
+				<div>
+					<i className="fa fa-check text-success" /> อนุมัติแล้ว
+				</div>
+			);
 		case 'not approve':
-			return <div><i className="fa fa-times text-danger" /> ไม่อนุมัติรายการ</div>;
+			return (
+				<div>
+					<i className="fa fa-times text-danger" /> ไม่อนุมัติรายการ
+				</div>
+			);
 		default:
 			return <div>รอการอนุมัติ</div>;
 	}
@@ -69,8 +77,7 @@ const UsersList = () => {
 									onClick={() => {
 										setOrder(head.key);
 										setToggleAsc(!toggleAsc);
-									}}
-								>
+									}}>
 									{head.label}
 									{order === head.key && (
 										<i className={`fa fa-arrow-${toggleAsc ? 'down' : 'up'}`} />
@@ -96,7 +103,9 @@ const UsersList = () => {
 						<tbody>
 							{userStatement.map(state => (
 								<tr key={state._id}>
-									<td>{state.CustomerData ? state.CustomerData.gameId : 'N/A'}</td>
+									<td>
+										{state.CustomerData ? state.CustomerData.gameId : 'N/A'}
+									</td>
 									<td>{moment(state.created_at).format('DD/MM/YYYY hh:mm')}</td>
 									<td>{state.type}</td>
 									<td>{state.staffId}</td>
@@ -108,8 +117,7 @@ const UsersList = () => {
 											color="primary"
 											onClick={() =>
 												history.push(`/statement/${state.customer_id}`)
-											}
-										>
+											}>
 											<i className="fa fa-list-alt" />
 										</Button>
 									</td>
@@ -124,14 +132,12 @@ const UsersList = () => {
 					<Button
 						disabled={page <= 1}
 						onClick={() => setPage(page - 1)}
-						style={{ marginRight: '2px' }}
-					>
+						style={{ marginRight: '2px' }}>
 						<i className="fa fa-arrow-left" />
 					</Button>
 					<Button
 						onClick={() => setPage(page + 1)}
-						style={{ marginLeft: '2px' }}
-					>
+						style={{ marginLeft: '2px' }}>
 						<i className="fa fa-arrow-right" />
 					</Button>
 				</div>

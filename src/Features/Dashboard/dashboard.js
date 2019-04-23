@@ -6,11 +6,14 @@ import {
 	CardBody,
 	CardHeader,
 	CardFooter,
-	CardTitle,
 	Progress,
 	Input,
 	Row,
 	Col,
+	Form,
+	FormGroup,
+	InputGroup,
+	InputGroupAddon,
 } from 'reactstrap';
 import useCustomers from '../../Hooks/useCustomers';
 import Select from 'react-select';
@@ -26,8 +29,9 @@ const Dashboard = () => {
 	);
 	const [curValue, setCurValue] = useState(0);
 	const [curProValue, setCurProvalue] = useState(0);
-	const [totalValue, setTotalValue] = useState(0);
-
+	const [currentWithdraw, setCurrentWithdraw] = useState(0);
+	const [currentDeposit, setCurrentDeposit] = useState(0);
+	const [currentBonus, setCurrentBonus] = useState(0);
 	const [mode, setMode] = useState({ label: 'รายเดือน', value: 'month' });
 	const [year, setYear] = useState(moment().format('YYYY'));
 	const [month, setMonth] = useState({
@@ -55,7 +59,7 @@ const Dashboard = () => {
 		setReportActivity([]);
 		setLoadReportStatementValue(true);
 		setReportStatementValue([]);
-
+		
 		axios
 			.get(
 				`/api/v1/statements/report?mode=${mode.value}&year=${year}&month=${
@@ -123,10 +127,35 @@ const Dashboard = () => {
 						];
 					}
 				});
+				console.log(report);
 
+				const currentDeposit = report.reduce((acc, curr) => {
+					if (typeof curr[2] === 'number') {
+						return acc + curr[2];
+					}
+					return acc;
+				}, 0);
+
+				const currentWithdraw = report.reduce((acc, curr) => {
+					if (typeof curr[1] === 'number') {
+						return acc + curr[1];
+					}
+					return acc;
+				}, 0);
+
+				const currentBonusRaw = report.reduce((acc, curr) => {
+					if (typeof curr[4] === 'number') {
+						return acc + curr[4];
+					}
+					return acc;
+				}, 0);
+
+				// console.log(currentBonusRaw);
+				setCurrentDeposit(currentDeposit);
+				setCurrentWithdraw(currentWithdraw);
+				setCurrentBonus(currentBonusRaw);
 				setCurProvalue(parseFloat(data.promotion_total));
 				setCurValue(parseFloat(data.total));
-				setTotalValue(parseFloat(data.total + data.promotion_total));
 
 				report.unshift([
 					mode.value === 'month' ? 'วันที่' : 'เดือน',
@@ -147,117 +176,144 @@ const Dashboard = () => {
 			<CardBody>
 				<Row>
 					<Col>
-						ยอดเงินฝากในระบบทั้งหมด <b>{curValue}</b>฿{' '}
-						ยอดเงินโบนัสที่มีในบัญชีทั้งหมด <b>{curProValue}</b>฿ รวมทั้งหมด{' '}
-						<b>{totalValue}</b>฿<CardTitle>สรุปผลการแสดง Statement</CardTitle>
-						{!isLoadStatementActivity ? (
-							<div>
-								{reportStatementActivity.length > 1 ? (
-									<Chart
-										chartType="LineChart"
-										data={reportStatementActivity}
-										options={{
-											title: 'Statement Activity',
-											subtitle: `ใน ${
-												mode.value === 'month' ? mode.label : year
-											}`,
-											hAxis: {
-												title: mode.value === 'month' ? 'วันที่' : 'เดือน',
-											},
-											vAxis: {
-												title: 'จำนวนครั้งที่ทำรายการ',
-											},
-											animation: {
-												startup: true,
-												easing: 'linear',
-												duration: 1500,
-											},
-											curveType: 'function',
-										}}
-									/>
-								) : (
-									<div>ไม่พบข้อมูลของช่วงนี้</div>
-								)}
-							</div>
-						) : (
-							<div style={{ margin: '3%' }}>
-								<Progress animated value={100} color="success" />
-							</div>
-						)}
-						{!isLoadreportStatementValue ? (
-							<div>
-								{reportStatementValue.length > 1 ? (
-									<Chart
-										chartType="LineChart"
-										data={reportStatementValue}
-										options={{
-											title: 'Statement value',
-											subtitle: `ใน ${
-												mode.value === 'month' ? mode.label : year
-											}`,
-											hAxis: {
-												title: mode.value === 'month' ? 'วันที่' : 'เดือน',
-											},
-											vAxis: {
-												title: 'จำนวนเงิน',
-											},
-											animation: {
-												startup: true,
-												easing: 'linear',
-												duration: 1500,
-											},
-											curveType: 'function',
-										}}
-									/>
-								) : (
-									<div>ไม่พบข้อมูลของช่วงนี้</div>
-								)}
-							</div>
-						) : (
-							<div style={{ margin: '3%' }}>
-								<Progress animated value={100} />
-							</div>
-						)}
-						<div
-							className="d-flex justify-content-center"
-							style={{ marginTop: '2%' }}
-						>
-							<div style={{ width: '60%' }}>
-								<Select
-									options={[
-										{ label: 'รายเดือน', value: 'month' },
-										{ label: 'รายปี', value: 'year' },
-									]}
-									value={mode}
-									onChange={e => setMode(e)}
-								/>
-								<Input
-									type="number"
-									value={year}
-									onChange={e => setYear(e.target.value)}
-								/>
-								{mode.value === 'month' && (
-									<Select
-										options={monthOptions}
-										onChange={e => setMonth(e)}
-										value={month}
-									/>
-								)}
-							</div>
-						</div>
-					</Col>
-				</Row>
-				<hr />
-				<Row>
-					<Col>
-						<CardTitle>สรุปผลลูกค้า</CardTitle>
+						<h2>ยอดปัจจุบัน</h2>
 						{!customerLoad ? (
-							<p>จำนวนสมาชิกทั้งสิ้น {customerList.length} คน</p>
+							<div>
+								<p>จำนวนสมาชิกทั้งสิ้น {customerList.length} คน</p>
+								<Chart
+									chartType="PieChart"
+									width={'500px'}
+									height={'300px'}
+									data={[
+										['Transection', 'value'],
+										['ยอดเงินฝากในระบบทั้งหมด', curValue],
+										['ยอดโบนัสที่มีในระบบทั้งหมด', curProValue],
+									]}
+									options={{ is3D: true }}
+								/>
+							</div>
 						) : (
 							<Progress animated value={100} />
 						)}
 					</Col>
 				</Row>
+				<Col>
+					<h2>สรุปผลการแสดง Statement</h2>
+					{!isLoadStatementActivity ? (
+						<div>
+							{reportStatementActivity.length > 1 ? (
+								<Chart
+									chartType="LineChart"
+									data={reportStatementActivity}
+									options={{
+										title: 'Statement Activity',
+										subtitle: `ใน ${
+											mode.value === 'month' ? mode.label : year
+										}`,
+										hAxis: {
+											title: mode.value === 'month' ? 'วันที่' : 'เดือน',
+										},
+										vAxis: {
+											title: 'จำนวนครั้งที่ทำรายการ',
+										},
+										animation: {
+											startup: true,
+											easing: 'linear',
+											duration: 1500,
+										},
+										curveType: 'function',
+									}}
+								/>
+							) : (
+								<div>ไม่พบข้อมูลของช่วงนี้</div>
+							)}
+						</div>
+					) : (
+						<div style={{ margin: '3%' }}>
+							<Progress animated value={100} color="success" />
+						</div>
+					)}
+					{!isLoadreportStatementValue ? (
+						<div>
+							{reportStatementValue.length > 1 ? (
+								<Chart
+									chartType="LineChart"
+									data={reportStatementValue}
+									options={{
+										title: 'Statement value',
+										subtitle: `ใน ${
+											mode.value === 'month' ? mode.label : year
+										}`,
+										hAxis: {
+											title: mode.value === 'month' ? 'วันที่' : 'เดือน',
+										},
+										vAxis: {
+											title: 'จำนวนเงิน',
+										},
+										animation: {
+											startup: true,
+											easing: 'linear',
+											duration: 1500,
+										},
+									}}
+								/>
+							) : (
+								<div>ไม่พบข้อมูลของช่วงนี้</div>
+							)}
+						</div>
+					) : (
+						<div style={{ margin: '3%' }}>
+							<Progress animated value={100} />
+						</div>
+					)}
+					{!isLoadreportStatementValue ? (
+						<Form>
+							<FormGroup row>
+								<Col>
+									<InputGroup>
+										<InputGroupAddon addonType="prepend">ฝาก</InputGroupAddon>
+										<Input value={`${currentDeposit} ฿`} disabled />
+										<InputGroupAddon addonType="append">ถอน</InputGroupAddon>
+										<Input value={`${currentWithdraw} ฿`} disabled />
+										<InputGroupAddon addonType="append">โบนัส</InputGroupAddon>
+										<Input value={`${currentBonus} ฿`} disabled />
+									</InputGroup>
+								</Col>
+							</FormGroup>
+						</Form>
+					) : (
+						<div style={{ margin: '3%' }}>
+							<Progress animated color="danger" value={100} />
+						</div>
+					)}
+					<div
+						className="d-flex justify-content-center"
+						style={{ marginTop: '2%' }}>
+						<div style={{ width: '60%' }}>
+							<Select
+								options={[
+									{ label: 'รายเดือน', value: 'month' },
+									{ label: 'รายปี', value: 'year' },
+								]}
+								value={mode}
+								onChange={e => setMode(e)}
+							/>
+							<Input
+								type="number"
+								value={year}
+								onChange={e => setYear(e.target.value)}
+							/>
+							{mode.value === 'month' && (
+								<Select
+									options={monthOptions}
+									onChange={e => setMonth(e)}
+									value={month}
+								/>
+							)}
+						</div>
+					</div>
+				</Col>
+				<Row />
 			</CardBody>
 			<CardFooter />
 		</Card>

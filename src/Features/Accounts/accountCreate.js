@@ -65,67 +65,81 @@ const Account = () => {
 			</CardHeader>
 			<CardBody>
 				<Form>
-				<FormGroup row>
+					<FormGroup row>
 						<Label sm={2}>เลือกบัญชีผู้ใช้</Label>
 						<Col sm={10}>
-							<Button color={toggleSelectUserMode ? 'primary': 'warning'} onClick={() => setToggleSelectUserMde(!toggleSelectUserMode)}>App Id / Full Name</Button>
+							<Button
+								color={toggleSelectUserMode ? 'primary' : 'warning'}
+								onClick={() => setToggleSelectUserMde(!toggleSelectUserMode)}>
+								App Id / Full Name
+							</Button>
 						</Col>
 					</FormGroup>
-					{ toggleSelectUserMode &&
-					<FormGroup row>
-						<Label sm={2}>Full Name</Label>
-						<Col sm={10}>
-							<Select
-								options={userOptions}
-								isSearchable
-								isClearable
-								isLoading={CustomerListLoad}
-								placeholder="เลือกบัญชีผู้ใช้ หรือพิมพ์ค้นหา ชื่อ"
-								style={{ width: '60%' }}
-								onChange={e => {
-									e && setCustomerId(e.value);
-								}}
-							/>
-						</Col>
-					</FormGroup>
-					}{ !toggleSelectUserMode &&
-					<FormGroup row>
-						<Label sm={2}>App Id</Label>
-					<Col sm={10}>
-							<Select
-								options={userOptions2}
-								isSearchable
-								isClearable
-								isLoading={CustomerListLoad}
-								placeholder="เลือกบัญชีผู้ใช้ หรือพิมพ์ค้นหา App Id"
-								style={{ width: '60%' }}
-								onChange={e => {
-									e && setCustomerId(e.value);
-								}}
-							/>
-						</Col>
-					</FormGroup>
-					}
-
-					{!isFetchState && !isNaN(currentTotal) && !isNaN(currentPromotionTotal)&& (
+					{toggleSelectUserMode && (
 						<FormGroup row>
-							<Label sm={2}>สถานะการเงินของ Account ที่เลือก</Label>
+							<Label sm={2}>Full Name</Label>
 							<Col sm={10}>
-								<InputGroup>
-									<InputGroupAddon addonType="prepend">
-										ยอดเงินฝาก
-									</InputGroupAddon>
-									<Input value={`${currentTotal} ฿`} disabled />
-									<InputGroupAddon addonType="append">
-										ยอดเงินโปรโมชั่น
-									</InputGroupAddon>
-									<Input value={`${currentPromotionTotal} ฿`} disabled />
-									<InputGroupAddon addonType="append">ยอดสุทธิ</InputGroupAddon>
-									<Input value={`${parseFloat(currentPromotionTotal + currentTotal)} ฿`} disabled />
-								</InputGroup>
+								<Select
+									options={userOptions}
+									isSearchable
+									isClearable
+									isLoading={CustomerListLoad}
+									placeholder="เลือกบัญชีผู้ใช้ หรือพิมพ์ค้นหา ชื่อ"
+									style={{ width: '60%' }}
+									onChange={e => {
+										e && setCustomerId(e.value);
+									}}
+								/>
 							</Col>
 						</FormGroup>
 					)}
+					{!toggleSelectUserMode && (
+						<FormGroup row>
+							<Label sm={2}>App Id</Label>
+							<Col sm={10}>
+								<Select
+									options={userOptions2}
+									isSearchable
+									isClearable
+									isLoading={CustomerListLoad}
+									placeholder="เลือกบัญชีผู้ใช้ หรือพิมพ์ค้นหา App Id"
+									style={{ width: '60%' }}
+									onChange={e => {
+										e && setCustomerId(e.value);
+									}}
+								/>
+							</Col>
+						</FormGroup>
+					)}
+
+					{!isFetchState &&
+						!isNaN(currentTotal) &&
+						!isNaN(currentPromotionTotal) && (
+							<FormGroup row>
+								<Label sm={2}>สถานะการเงินของ Account ที่เลือก</Label>
+								<Col sm={10}>
+									<InputGroup>
+										<InputGroupAddon addonType="prepend">
+											ยอดเงินฝาก
+										</InputGroupAddon>
+										<Input value={`${currentTotal} ฿`} disabled />
+										<InputGroupAddon addonType="append">
+											ยอดเงินโปรโมชั่น
+										</InputGroupAddon>
+										<Input value={`${currentPromotionTotal} ฿`} disabled />
+										<InputGroupAddon addonType="append">
+											ยอดสุทธิ
+										</InputGroupAddon>
+										<Input
+											value={`${parseFloat(
+												currentPromotionTotal + currentTotal,
+											)} ฿`}
+											disabled
+										/>
+									</InputGroup>
+								</Col>
+							</FormGroup>
+						)}
 					<FormGroup row>
 						<Label sm={2}>เลือกประเภทการทำรายการ</Label>
 						<Col sm={10}>
@@ -193,8 +207,7 @@ const Account = () => {
 				<Button
 					color="success"
 					disabled={validate}
-					onClick={() => addStatement()}
-				>
+					onClick={() => addStatement()}>
 					บันทึกข้อมูล
 				</Button>
 			</CardFooter>
