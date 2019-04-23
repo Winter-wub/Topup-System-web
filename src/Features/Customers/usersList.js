@@ -67,8 +67,7 @@ const UsersList = () => {
 							<Button
 								color="success"
 								style={{ marginRight: '2px' }}
-								onClick={() => history.push('/create/customer')}
-							>
+								onClick={() => history.push('/create/customer')}>
 								<i className="fa fa-user-plus" aria-hidden="true" /> Create New
 								Customer
 							</Button>
@@ -92,8 +91,7 @@ const UsersList = () => {
 										onClick={() => {
 											setOrder(head.key);
 											setToggleAsc(!toggleAsc);
-										}}
-									>
+										}}>
 										{head.label}
 										{order === head.key && (
 											<i
@@ -102,10 +100,10 @@ const UsersList = () => {
 										)}
 									</th>
 								))}
-								<th>Withdraw</th>
-								<th>Promo</th>
-								<th>Deposit</th>
-								<th>Total</th>
+								<th>ฝาก</th>
+								<th>ถอน</th>
+								<th>โบนัส</th>
+								<th>ทั้งหมด</th>
 								<th>Action</th>
 							</tr>
 						</thead>
@@ -113,14 +111,18 @@ const UsersList = () => {
 							{customerList.map(customer => (
 								<tr key={customer.gameId}>
 									<td>{customer.gameId}</td>
-									<td>{customer.fullname.length > 13 ? `${customer.fullname.substring(0,6)}...` : customer.fullname}</td>
+									<td>
+										{customer.fullname.length > 13
+											? `${customer.fullname.substring(0, 6)}...`
+											: customer.fullname}
+									</td>
 									<td>{customer.telno}</td>
 									<td>
 										{moment(customer.created_at).format('D/MM/YYYY hh:mm')}
 									</td>
 									<td>{customer.withdraw_total}</td>
-									<td>{customer.withdrawpromo_total}</td>
 									<td>{customer.deposit_total}</td>
+									<td>{customer.withdrawpromo_total}</td>
 									<td>{customer.total}</td>
 									<td>
 										<div className="ActionMenu">
@@ -128,22 +130,20 @@ const UsersList = () => {
 												color="primary"
 												onClick={() =>
 													history.push(`/statement/${customer._id}`)
-												}
-											>
+												}>
 												<i className="fa fa-list-alt" />
 											</Button>
 											<Button
 												onClick={() =>
 													history.push(`/customer/${customer._id}`)
 												}
-												color="warning"
-											>
+												color="warning">
 												<i className="fa fa-pencil" />
 											</Button>
 											<Button
 												color="danger"
-												onClick={() => deleteUser(customer._id)}
-											>
+												disabled={customer.total > 0}
+												onClick={() => deleteUser(customer._id)}>
 												<i className="fa fa-trash-o" />
 											</Button>
 										</div>
@@ -161,8 +161,7 @@ const UsersList = () => {
 							<Button
 								color="primary"
 								disabled={page === 1}
-								onClick={() => setPage(page - 1)}
-							>
+								onClick={() => setPage(page - 1)}>
 								<i className="fa fa-arrow-left" />
 							</Button>
 						</InputGroupAddon>

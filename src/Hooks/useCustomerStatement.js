@@ -51,6 +51,10 @@ const useCustomerStatement = () => {
 					text = 'การทำรายการล้มเหลว กรุณาเช็คยอดที่คงเหลือ หากถอน';
 				}
 				swal.fire('Information', text, 'info');
+				setCustomerId('');
+				setTypeAction('');
+				setValue(0);
+				setDescription('');
 			})
 			.catch(err => {
 				console.log(err);
@@ -184,7 +188,9 @@ const useCustomerStatement = () => {
 				const { total, promotion_total, statements } = response.data;
 				setCurrentTotal(total);
 				setCurrentPromotionTotal(promotion_total);
-				setCurrentAllTotal(parseFloat(currentTotal)+ parseFloat(currentPromotionTotal));
+				setCurrentAllTotal(
+					parseFloat(currentTotal) + parseFloat(currentPromotionTotal),
+				);
 				setUserStatement(statements);
 			})
 			.catch(error => {

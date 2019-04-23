@@ -266,6 +266,7 @@ const UserEdit = ({ match }) => {
 					</Button>
 					<Button
 						color="danger"
+						disabled={userData.total > 0}
 						style={{ float: 'Right' }}
 						onClick={() => deleteUser(match.params.id)}>
 						<i className="fa fa-trash-o" /> ลบข้อมูลลูกค้า

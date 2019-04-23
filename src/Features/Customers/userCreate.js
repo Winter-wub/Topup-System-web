@@ -61,6 +61,7 @@ const Referentmenu = ({ optionName, onChange, value, fbGroupOptions }) => {
 								onChange={e => onChange(e.value)}
 								options={fbGroupOptions}
 							/>
+							สามารถเลือก หรือเพิ่มได้โดยการพิมพ์ จากนั้นกด Enter
 						</div>
 					</Col>
 				</FormGroup>
@@ -73,8 +74,8 @@ const Referentmenu = ({ optionName, onChange, value, fbGroupOptions }) => {
 						<Input
 							style={{ width: '60%' }}
 							type="text"
-							value={value}
-							onChange={onChange}
+							value={value.value}
+							onChange={e => onChange(e.target.value)}
 						/>
 					</Col>
 				</FormGroup>

@@ -14,6 +14,7 @@ import {
 	FormGroup,
 	InputGroup,
 	InputGroupAddon,
+	Badge,
 } from 'reactstrap';
 import useCustomers from '../../Hooks/useCustomers';
 import Select from 'react-select';
@@ -193,6 +194,7 @@ const Dashboard = () => {
 						{!customerLoad ? (
 							<div>
 								<p>จำนวนสมาชิกทั้งสิ้น {customerList.length} คน</p>
+								<Badge color="danger">New</Badge>
 								<Chart
 									chartType="PieChart"
 									width={'500px'}

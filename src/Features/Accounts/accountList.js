@@ -51,6 +51,7 @@ const UsersList = () => {
 		{ key: 'customer_id', label: 'App id' },
 		{ key: 'created_at', label: 'สร้างเมื่อ' },
 		{ key: 'type', label: 'การทำรายการ' },
+		{ key: 'value', label: 'มูลค่า' },
 		{ key: 'staffId', label: 'ดำเนินการโดย' },
 		{ key: 'status', label: 'สถานะ' },
 	];
@@ -108,6 +109,7 @@ const UsersList = () => {
 									</td>
 									<td>{moment(state.created_at).format('DD/MM/YYYY hh:mm')}</td>
 									<td>{state.type}</td>
+									<td>{state.value}</td>
 									<td>{state.staffId}</td>
 									<td>
 										<Status statusText={state.status} />

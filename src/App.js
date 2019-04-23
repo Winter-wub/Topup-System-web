@@ -26,7 +26,12 @@ import history from './utils/history';
 import useAuthentication from './Hooks/useAuthentication';
 const cookie = new Cookie();
 const Home = () => {
-	return <div />;
+	return (
+		<div className="d-flex justify-content-center align-items-center">
+			กรุณาเลือกเมนูการทำงานตรง Navigation Bar ด้านบนได้เลย พัฒนาโดย StratosBlur
+			(github)
+		</div>
+	);
 };
 
 const NavbarItem = [
