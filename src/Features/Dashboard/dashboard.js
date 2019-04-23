@@ -27,6 +27,7 @@ const Dashboard = () => {
 	const [isLoadreportStatementValue, setLoadReportStatementValue] = useState(
 		[],
 	);
+	const [currentCustomerCreate, setCurrentCustomerCreate] = useState(0);
 	const [curValue, setCurValue] = useState(0);
 	const [curProValue, setCurProvalue] = useState(0);
 	const [currentWithdraw, setCurrentWithdraw] = useState(0);
@@ -93,8 +94,8 @@ const Dashboard = () => {
 					mode.value === 'month' ? 'วันที่' : 'เดือน',
 					'ถอน',
 					'ฝาก',
-					'ถอนโปรโมชั่น',
-					'ได้รับโบนัสโปรโมชั่น',
+					'ถอนโบนัส',
+					'ได้รับโบนัส',
 				]);
 				setReportActivity(report);
 			});
@@ -149,7 +150,6 @@ const Dashboard = () => {
 					return acc;
 				}, 0);
 
-				// console.log(currentBonusRaw);
 				setCurrentDeposit(currentDeposit);
 				setCurrentWithdraw(currentWithdraw);
 				setCurrentBonus(currentBonusRaw);
@@ -160,10 +160,24 @@ const Dashboard = () => {
 					mode.value === 'month' ? 'วันที่' : 'เดือน',
 					'ถอน',
 					'ฝาก',
-					'ถอนโปรโมชั่น',
-					'ได้รับโบนัสโปรโมชั่น',
+					'ถอนโบนัส',
+					'ได้รับโบนัส',
 				]);
 				setReportStatementValue(report);
+			});
+		axios
+			.get(
+				`/api/v1/customers/report?mode=${mode.value}&year=${year}&month=${
+					month.value
+				}`,
+			)
+			.then(({ data: Response }) => {
+				const { data } = Response;
+				const currentCreateCustomer = data.report.reduce((acc, curr) => {
+					return acc + curr.create_customer_sum;
+				}, 0);
+
+				setCurrentCustomerCreate(currentCreateCustomer);
 			});
 	}, [year, month, mode]);
 
@@ -276,6 +290,10 @@ const Dashboard = () => {
 										<Input value={`${currentWithdraw} ฿`} disabled />
 										<InputGroupAddon addonType="append">โบนัส</InputGroupAddon>
 										<Input value={`${currentBonus} ฿`} disabled />
+										<InputGroupAddon addonType="append">
+											สมาชิกใหม่ช่วงนี้
+										</InputGroupAddon>
+										<Input value={`${currentCustomerCreate} คน`} disabled />
 									</InputGroup>
 								</Col>
 							</FormGroup>

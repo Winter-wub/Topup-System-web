@@ -180,17 +180,6 @@ const Account = () => {
 						</div>
 					)}
 					<FormGroup row>
-						<Label sm={2}>คำอธิบายรายการ</Label>
-						<Col sm={10}>
-							<Input
-								style={{ width: '60%' }}
-								type="textarea"
-								value={description}
-								onChange={e => setDescription(e.target.value)}
-							/>
-						</Col>
-					</FormGroup>
-					<FormGroup row>
 						<Label sm={2}>มูลค่า</Label>
 						<Col sm={10}>
 							<Input
@@ -198,6 +187,17 @@ const Account = () => {
 								style={{ width: '60%' }}
 								value={value}
 								onChange={e => setValue(e.target.value)}
+							/>
+						</Col>
+					</FormGroup>
+					<FormGroup row>
+						<Label sm={2}>คำอธิบายรายการ</Label>
+						<Col sm={10}>
+							<Input
+								style={{ width: '60%' }}
+								type="textarea"
+								value={description}
+								onChange={e => setDescription(e.target.value)}
 							/>
 						</Col>
 					</FormGroup>
