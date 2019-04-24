@@ -33,6 +33,13 @@ const Status = ({ statusText }) => {
 	}
 };
 
+const type = {
+	deposit: 'ฝาก',
+	withdraw: 'ถอน',
+	deposit_promo: 'เพิ่มโบนัส',
+	withdraw_promo: 'ถอนโบนัส',
+};
+
 const UsersList = () => {
 	const { role } = useAuthentication();
 	const {
@@ -51,7 +58,7 @@ const UsersList = () => {
 		{ key: 'customer_id', label: 'App id' },
 		{ key: 'created_at', label: 'สร้างเมื่อ' },
 		{ key: 'type', label: 'การทำรายการ' },
-		{ key: 'value', label: 'มูลค่า' },
+		{ key: 'value', label: 'ยอดเงิน' },
 		{ key: 'staffId', label: 'ดำเนินการโดย' },
 		{ key: 'status', label: 'สถานะ' },
 	];
@@ -108,7 +115,7 @@ const UsersList = () => {
 										{state.CustomerData ? state.CustomerData.gameId : 'N/A'}
 									</td>
 									<td>{moment(state.created_at).format('DD/MM/YYYY hh:mm')}</td>
-									<td>{state.type}</td>
+									<td>{type[state.type]}</td>
 									<td>{state.value}</td>
 									<td>{state.staffId}</td>
 									<td>

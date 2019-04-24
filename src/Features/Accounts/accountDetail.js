@@ -9,8 +9,15 @@ const header = [
 	{ label: 'เวลา', key: 'created_at' },
 	{ label: 'Action', key: 'type' },
 	{ label: 'คำอธิบาย', key: 'description' },
-	{ label: 'มูลค่า', key: 'value' },
+	{ label: 'ยอดเงิน', key: 'value' },
 ];
+
+const type = {
+	deposit: 'ฝาก',
+	withdraw: 'ถอน',
+	deposit_promo: 'เพิ่มโบนัส',
+	withdraw_promo: 'ถอนโบนัส',
+};
 const AccountDetail = ({ customer_id }) => {
 	const {
 		setCustomerId,
@@ -98,7 +105,7 @@ const AccountDetail = ({ customer_id }) => {
 									<tr key={state._id}>
 										<td>{state._id}</td>
 										<td>{moment(state.created_at).calendar()}</td>
-										<td>{state.type}</td>
+										<td>{type[state.type]}</td>
 										<td>{state.description}</td>
 										<td>{state.value} ฿</td>
 										<td>

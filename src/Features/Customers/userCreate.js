@@ -43,7 +43,7 @@ const banksOptions = banks.map(bank => ({
 
 const ReferenceOption = [
 	{ label: 'จากเพื่อน', value: 'friend' },
-	{ label: 'Facebook Group', value: 'fb_group' },
+	{ label: 'Facebook', value: 'fb_group' },
 	{ label: 'Google,Yahoo,Bing', value: 'search_engine' },
 	{ label: 'อื่นๆ', value: 'other' },
 ];
@@ -69,7 +69,7 @@ const Referentmenu = ({ optionName, onChange, value, fbGroupOptions }) => {
 		case 'other':
 			return (
 				<FormGroup row>
-					<Label sm={2}>ระบุ</Label>
+					<Label sm={2}>รู้จักจาก (เพิ่มเติม)</Label>
 					<Col sm={10}>
 						<Input
 							style={{ width: '60%' }}

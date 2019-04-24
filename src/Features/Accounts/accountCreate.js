@@ -39,6 +39,8 @@ const Account = () => {
 		value,
 	} = useCustomerStatement();
 	const [toggleSelectUserMode, setToggleSelectUserMde] = useState(true);
+	const [customerValue, setCustomer] = useState('');
+	const [typeActionValue, setTypeActionValue] = useState('');
 	const userOptions = customerList.map(customer => ({
 		value: customer._id,
 		label: customer.fullname,
@@ -52,7 +54,7 @@ const Account = () => {
 	const typeActionOptions = [
 		{ value: 'deposit', label: 'ฝาก' },
 		{ value: 'withdraw', label: 'ถอน' },
-		{ value: 'deposit_promo', label: 'ฝาก (โปรโมชั่น)' },
+		{ value: 'deposit_promo', label: 'เพิ่มโบนัส' },
 	];
 
 	return (
@@ -82,12 +84,14 @@ const Account = () => {
 								<Select
 									options={userOptions}
 									isSearchable
+									value={customerValue}
 									isClearable
 									isLoading={CustomerListLoad}
 									placeholder="เลือกบัญชีผู้ใช้ หรือพิมพ์ค้นหา ชื่อ"
 									style={{ width: '60%' }}
 									onChange={e => {
 										e && setCustomerId(e.value);
+										setCustomer(e);
 									}}
 								/>
 							</Col>
@@ -124,7 +128,7 @@ const Account = () => {
 										</InputGroupAddon>
 										<Input value={`${currentTotal} ฿`} disabled />
 										<InputGroupAddon addonType="append">
-											ยอดเงินโปรโมชั่น
+											ยอดโบนัส
 										</InputGroupAddon>
 										<Input value={`${currentPromotionTotal} ฿`} disabled />
 										<InputGroupAddon addonType="append">
@@ -145,15 +149,19 @@ const Account = () => {
 						<Col sm={10}>
 							<Select
 								options={typeActionOptions}
-								onChange={e => setTypeAction(e.value)}
+								onChange={e => {
+									setTypeAction(e.value);
+									setTypeActionValue(e);
+								}}
 								style={{ width: '60%' }}
+								value={typeActionValue}
 							/>
 						</Col>
 					</FormGroup>
 					{typeAction === 'withdraw' && (
 						<div>
 							<FormGroup row>
-								<Label sm={2}>ถอนยอด Promotion </Label>
+								<Label sm={2}>ถอนยอด โบนัส </Label>
 								<Col sm={10}>
 									<Checkbox
 										color="primary"
@@ -166,7 +174,7 @@ const Account = () => {
 							</FormGroup>
 							{usePromo && (
 								<FormGroup row>
-									<Label sm={2}>ยอด Promotion ที่ต้องการถอน</Label>
+									<Label sm={2}>ยอดโบนัส ที่ต้องการถอน</Label>
 									<Col sm={10}>
 										<Input
 											type="number"
@@ -180,7 +188,7 @@ const Account = () => {
 						</div>
 					)}
 					<FormGroup row>
-						<Label sm={2}>มูลค่า</Label>
+						<Label sm={2}>ยอดเงิน</Label>
 						<Col sm={10}>
 							<Input
 								type="number"
@@ -207,7 +215,9 @@ const Account = () => {
 				<Button
 					color="success"
 					disabled={validate}
-					onClick={() => addStatement()}>
+					onClick={() => {
+						addStatement(setCustomer, setTypeActionValue);
+					}}>
 					บันทึกข้อมูล
 				</Button>
 			</CardFooter>

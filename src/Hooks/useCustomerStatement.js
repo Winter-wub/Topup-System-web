@@ -11,13 +11,13 @@ const useCustomerStatement = () => {
 	const [isFetchState, setFetchState] = useState(false);
 	const [typeAction, setTypeAction] = useState('');
 	const [usePromo, setUsePromo] = useState(false);
-	const [amountPromo, setAmountPromo] = useState(0);
+	const [amountPromo, setAmountPromo] = useState('');
 	const [customerId, setCustomerId] = useState('');
 	const [currentTotal, setCurrentTotal] = useState(0);
 	const [currentPromotionTotal, setCurrentPromotionTotal] = useState(0);
 	const [currentAllTotal, setCurrentAllTotal] = useState(0);
 	const [description, setDescription] = useState('');
-	const [value, setValue] = useState(0);
+	const [value, setValue] = useState('');
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
 	const [search, setSearch] = useState({ value: '', field: '' });
@@ -32,7 +32,7 @@ const useCustomerStatement = () => {
 		customerId.length > 0
 	);
 
-	const addStatement = () => {
+	const addStatement = (resetField, resetField2) => {
 		axios
 			.post('/api/v1/statements', {
 				data: {
@@ -53,8 +53,10 @@ const useCustomerStatement = () => {
 				swal.fire('Information', text, 'info');
 				setCustomerId('');
 				setTypeAction('');
-				setValue(0);
+				setValue('');
 				setDescription('');
+				resetField('');
+				resetField2('');
 			})
 			.catch(err => {
 				console.log(err);
@@ -83,7 +85,7 @@ const useCustomerStatement = () => {
 
 	const updateStatement = async (statement_id, staffId, status) => {
 		if (status) {
-			const { value: prompt } = await swal.fire({
+			const result = await swal.fire({
 				titleText: 'การยืนยันอนุมัติรายการ',
 				text: 'ใส่ Remark',
 				showCancelButton: true,
@@ -91,14 +93,14 @@ const useCustomerStatement = () => {
 				inputValue: '',
 				inputPlaceholder: 'กรอกคีย์เวิร์ด หรือช่วยจำ',
 			});
-
-			if (prompt) {
+			console.log(result);
+			if (!result.dismiss) {
 				try {
 					const { data: Response } = await axios.put('/api/v1/statements', {
 						data: {
 							staffId: staffId,
 							statement_id: statement_id,
-							remark: prompt,
+							remark: result.value,
 						},
 					});
 					const { data } = Response;
@@ -122,7 +124,7 @@ const useCustomerStatement = () => {
 				}
 			}
 		} else {
-			const { value: prompt } = await swal.fire({
+			const result = await swal.fire({
 				titleText: 'การยืนยันไม่อนุมัติรายการ',
 				text: 'ใส่ Remark',
 				showCancelButton: true,
@@ -131,7 +133,7 @@ const useCustomerStatement = () => {
 				inputPlaceholder: 'กรอกคีย์เวิร์ด หรือช่วยจำ',
 			});
 
-			if (prompt) {
+			if (!result.dismiss) {
 				try {
 					const { data: Response } = await axios.put(
 						'/api/v1/statements/delete',
@@ -139,7 +141,7 @@ const useCustomerStatement = () => {
 							data: {
 								staffId: staffId,
 								statement_id: statement_id,
-								remark: prompt,
+								remark: result.value,
 							},
 						},
 					);

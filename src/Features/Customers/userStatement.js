@@ -24,14 +24,28 @@ import useCustomer from '../../Hooks/useCustomer';
 const Status = ({ statusText }) => {
 	switch (statusText) {
 		case 'approve':
-			return <div><i className="fa fa-check text-success" /> อนุมัติแล้ว</div>;
+			return (
+				<div>
+					<i className="fa fa-check text-success" /> อนุมัติแล้ว
+				</div>
+			);
 		case 'not approve':
-			return <div><i className="fa fa-times text-danger" /> ไม่อนุมัติรายการ</div>;
+			return (
+				<div>
+					<i className="fa fa-times text-danger" /> ไม่อนุมัติรายการ
+				</div>
+			);
 		default:
 			return <div>รอการอนุมัติ</div>;
 	}
 };
 
+const type = {
+	deposit: 'ฝาก',
+	withdraw: 'ถอน',
+	deposit_promo: 'เพิ่มโบนัส',
+	withdraw_promo: 'ถอนโบนัส',
+};
 
 const UsersStatementList = ({ match }) => {
 	const {
@@ -39,7 +53,6 @@ const UsersStatementList = ({ match }) => {
 		userStatement,
 		currentTotal,
 		currentPromotionTotal,
-		currentAllTotal,
 		setCustomerId,
 		setPage,
 		setLimit,
@@ -63,7 +76,7 @@ const UsersStatementList = ({ match }) => {
 		{ label: 'เวลา', key: 'created_at' },
 		{ label: 'Action', key: 'type' },
 		{ label: 'คำอธิบาย', key: 'description' },
-		{ label: 'มูลค่า', key: 'value' },
+		{ label: 'ยอดเงิน', key: 'value' },
 	];
 
 	return (
@@ -72,8 +85,7 @@ const UsersStatementList = ({ match }) => {
 				<CardHeader>
 					<Button
 						style={{ marginRight: '20px' }}
-						onClick={() => history.goBack()}
-					>
+						onClick={() => history.goBack()}>
 						<i className="fa fa-arrow-left" />
 					</Button>
 					App ID : <b>{userData.gameId}</b>
@@ -108,7 +120,7 @@ const UsersStatementList = ({ match }) => {
 									</Col>
 								</FormGroup>
 								<FormGroup row>
-									<Label sm={2}>ยอดในระบบ</Label>
+									<Label sm={2}>ยอดฝาก</Label>
 									<Col sm={10}>
 										<Input
 											style={{ width: '60%' }}
@@ -118,7 +130,7 @@ const UsersStatementList = ({ match }) => {
 									</Col>
 								</FormGroup>
 								<FormGroup row>
-									<Label sm={2}>ยอดจากโปรโมชั่น</Label>
+									<Label sm={2}>ยอดโบนัส</Label>
 									<Col sm={10}>
 										<Input
 											style={{ width: '60%' }}
@@ -132,7 +144,7 @@ const UsersStatementList = ({ match }) => {
 									<Col sm={10}>
 										<Input
 											style={{ width: '60%' }}
-											value={currentAllTotal}
+											value={currentTotal + currentPromotionTotal}
 											disabled
 										/>
 									</Col>
@@ -140,7 +152,9 @@ const UsersStatementList = ({ match }) => {
 							</Form>
 						</CardBody>
 					)}
-					{ userStatement.length > 0 && <AccountDetail customer_id={match.params.id} />}
+					{userStatement.length > 0 && (
+						<AccountDetail customer_id={match.params.id} />
+					)}
 					<h3 style={{ marginBottom: '10px' }}>ประวัติการฝาก และถอน</h3>
 					<Row>
 						<Col>
@@ -174,14 +188,12 @@ const UsersStatementList = ({ match }) => {
 										<Button
 											disabled={page <= 1}
 											onClick={() => setPage(page - 1)}
-											style={{ marginRight: '2px' }}
-										>
+											style={{ marginRight: '2px' }}>
 											<i className="fa fa-arrow-left" />
 										</Button>
 										<Button
 											onClick={() => setPage(page + 1)}
-											style={{ marginLeft: '2px' }}
-										>
+											style={{ marginLeft: '2px' }}>
 											<i className="fa fa-arrow-right" />
 										</Button>
 									</div>
@@ -199,8 +211,7 @@ const UsersStatementList = ({ match }) => {
 										onClick={() => {
 											setOrder(head.key);
 											setToggleAsc(!toggleAsc);
-										}}
-									>
+										}}>
 										{head.label}
 										{order === head.key && (
 											<i
@@ -230,7 +241,7 @@ const UsersStatementList = ({ match }) => {
 									<tr key={state._id}>
 										<td>{state._id}</td>
 										<td>{moment(state.created_at).calendar()}</td>
-										<td>{state.type}</td>
+										<td>{type[state.type]}</td>
 										<td>{state.description}</td>
 										<td>{state.value} ฿</td>
 										<td>
