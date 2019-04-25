@@ -49,7 +49,6 @@ const UsersList = () => {
 		toggleAsc,
 		order,
 		isFetchState,
-		setLimit,
 		setPage,
 		page,
 	} = useCustomerStatement();
@@ -65,9 +64,8 @@ const UsersList = () => {
 
 	useEffect(() => {
 		if (role !== '99') {
-			history.goBack();
+			history.push('/dashboard');
 		}
-		setLimit(0);
 	}, []);
 
 	return (

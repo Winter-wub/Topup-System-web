@@ -126,10 +126,15 @@ const UserCreate = () => {
 		const value = event.target.value;
 		setUserInfo({ ...userInfo, [key]: value.toString() });
 		if (key === 'gameId') {
-			if (await checkGameIdExists(value)) {
-				setValidate({ ...validate, gameId: false });
+			const isVailde = await checkGameIdExists(value);
+			if (value.length > 1) {
+				if (isVailde) {
+					setValidate({ ...validate, gameId: false });
+				} else {
+					setValidate({ ...validate, gameId: true });
+				}
 			} else {
-				setValidate({ ...validate, gameId: true });
+				setValidate({ ...validate, gameId: false });
 			}
 		} else if (key === 'fullname') {
 			if (value.length < 6) {
@@ -201,7 +206,10 @@ const UserCreate = () => {
 								onChange={e => validater(e, 'gameId')}
 							/>
 							{!validate.gameId && (
-								<div className="text-danger">App ID ใช้แล้ว</div>
+								<div className="text-danger">
+									ควรที่จะกรอกฟิวล์นี้ และค่าของฟิวล์นี้
+									ควรจะที่แตกต่างกันที่มีอยู่ในระบบอยู่แล้ว
+								</div>
 							)}
 						</Col>
 					</FormGroup>
@@ -339,14 +347,14 @@ const UserCreate = () => {
 						</Col>
 					</FormGroup>
 				</Form>
-				<div>(* จำเป็นต้องกรอก )</div>
+				<div className="text-danger">(* จำเป็นต้องกรอก )</div>
 			</CardBody>
 			<CardFooter>
 				<Button
 					disabled={isEnabledAddNewCustomer}
 					color="primary"
 					onClick={async () => await createCustomer()}>
-					<i className="fa fa-plus" /> Add User
+					<i className="fa fa-plus" /> Create Customer
 				</Button>
 			</CardFooter>
 		</Card>

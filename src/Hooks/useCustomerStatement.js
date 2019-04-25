@@ -6,25 +6,30 @@ import history from '../utils/history';
 
 const swal = withReactContent(Swal);
 
-const useCustomerStatement = () => {
+const useCustomerStatement = (
+	initCustomerId = '',
+	initlimit = 10,
+	initSearch = { value: '', field: '' },
+	initLike = true,
+) => {
 	const [userStatement, setUserStatement] = useState([]);
 	const [isFetchState, setFetchState] = useState(false);
 	const [typeAction, setTypeAction] = useState('');
 	const [usePromo, setUsePromo] = useState(false);
 	const [amountPromo, setAmountPromo] = useState('');
-	const [customerId, setCustomerId] = useState('');
+	const [customerId, setCustomerId] = useState(initCustomerId);
 	const [currentTotal, setCurrentTotal] = useState(0);
 	const [currentPromotionTotal, setCurrentPromotionTotal] = useState(0);
 	const [currentAllTotal, setCurrentAllTotal] = useState(0);
 	const [description, setDescription] = useState('');
 	const [value, setValue] = useState('');
 	const [page, setPage] = useState(1);
-	const [limit, setLimit] = useState(10);
-	const [search, setSearch] = useState({ value: '', field: '' });
+	const [limit, setLimit] = useState(initlimit);
+	const [search, setSearch] = useState(initSearch);
 	const [order, setOrder] = useState('');
 	const [toggleAsc, setToggleAsc] = useState(true);
 	const [username] = useGlobal('username');
-	const [like, setLike] = useState(true);
+	const [like, setLike] = useState(initLike);
 
 	const validate = !(
 		value > 0 &&

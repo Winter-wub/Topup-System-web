@@ -105,11 +105,13 @@ const Account = () => {
 									options={userOptions2}
 									isSearchable
 									isClearable
+									value={customerValue}
 									isLoading={CustomerListLoad}
 									placeholder="เลือกบัญชีผู้ใช้ หรือพิมพ์ค้นหา App Id"
 									style={{ width: '60%' }}
 									onChange={e => {
 										e && setCustomerId(e.value);
+										setCustomer(e);
 									}}
 								/>
 							</Col>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Table, Row, Col, Button, Progress } from 'reactstrap';
 import useCustomerStatement from '../../Hooks/useCustomerStatement';
 import useAuthentication from '../../Hooks/useAuthentication';
@@ -20,9 +20,7 @@ const type = {
 };
 const AccountDetail = ({ customer_id }) => {
 	const {
-		setCustomerId,
 		order,
-		setLimit,
 		page,
 		setPage,
 		isFetchState,
@@ -30,17 +28,17 @@ const AccountDetail = ({ customer_id }) => {
 		setOrder,
 		toggleAsc,
 		setToggleAsc,
-		setSearch,
-		setLike,
 		updateStatement,
-	} = useCustomerStatement();
+	} = useCustomerStatement(
+		customer_id,
+		5,
+		{ field: 'status', value: 'waiting' },
+		false,
+	);
 	const { role, username_state } = useAuthentication();
-	useEffect(() => {
-		setCustomerId(customer_id);
-		setLimit(5);
-		setSearch({ field: 'status', value: 'waiting' });
-		setLike(false);
-	}, []);
+	// useEffect(() => {
+	// 	setCustomerId(customer_id);
+	// }, []);
 
 	return (
 		<div>
