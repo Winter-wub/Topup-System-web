@@ -14,7 +14,6 @@ import {
 	FormGroup,
 	InputGroup,
 	InputGroupAddon,
-	Badge,
 } from 'reactstrap';
 import useCustomers from '../../Hooks/useCustomers';
 import Select from 'react-select';
@@ -194,15 +193,15 @@ const Dashboard = () => {
 						{!customerLoad ? (
 							<div>
 								<p>จำนวนสมาชิกทั้งสิ้น {customerList.length} คน</p>
-								<Badge color="danger">New</Badge>
 								<Chart
 									chartType="PieChart"
 									width={'500px'}
 									height={'300px'}
 									data={[
 										['Transection', 'value'],
-										['ยอดเงินฝากในระบบทั้งหมด', curValue],
-										['ยอดโบนัสที่มีในระบบทั้งหมด', curProValue],
+										['ยอดเงินฝากในระบบทั้งหมด', curValue] && curValue > 0,
+										['ยอดโบนัสที่มีในระบบทั้งหมด', curProValue] &&
+											curProValue > 0,
 									]}
 									options={{ is3D: true }}
 								/>
