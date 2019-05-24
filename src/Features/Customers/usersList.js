@@ -113,7 +113,7 @@ const UsersList = () => {
 									<td>{customer.gameId}</td>
 									<td>
 										{customer.fullname.length > 13
-											? `${customer.fullname.substring(0, 6)}...`
+											? `${customer.fullname.substring(0, 10)}...`
 											: customer.fullname}
 									</td>
 									<td>{customer.telno}</td>
